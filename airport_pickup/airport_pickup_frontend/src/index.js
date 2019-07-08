@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
     const newDriverForm = document.querySelector('#new-driver-form')
     const newPickUpForm = document.querySelector('#new-pickup-form')
+    const estimatedTimeDiv = document.querySelector('#estimated-arrival')
 
     newPickUpForm.addEventListener('submit', event => {
         event.preventDefault()
@@ -30,21 +31,58 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
        console.log(airportCode)
 
-        getFlightInfo(airportCode)
+        getFlightInfo(airportCode, flightNumber)
 
         createPickup({passenger_name: passengerName, flight_number: flightNumber, driver_id: driver, airport_id: airport})
     })
 
-    const getFlightInfo = (airportCode) => {
+    const getFlightInfo = (airportCode, flightNumber) => {
 
         fetch(`http://aviation-edge.com/v2/public/timetable?key=${apiKey}&iataCode=${airportCode}&type=arrival`)
             .then(response => response.json())
-            .then(data => showData(data))
+            .then(data => findFlight(data, flightNumber))
     }
     
-    const showData = flightData => {
+    const findFlight = (flightData, flightNumber) => {
        console.log(flightData)
+       console.log(flightNumber)
+       const new_array = []
+       let status;
+       for(let i=0;i < flightData.length;i++)
+       {
+           if(flightData[i].flight.iataNumber === flightNumber)
+           {
+               status = flightData[i].status
+               new_array.push(flightData[i].arrival)
+           }
+       }
+       estimatedTime(new_array,status);
     }
+
+    const estimatedTime = (new_array,status) =>{
+        console.log(status)
+        estimatedTimeDiv.innerHTML = ""
+        div = document.createElement("div")
+        let d = new Date(new_array[0].estimatedTime)
+        let l = new Date(new_array[0].scheduledTime)
+        const landing_time = d.toLocaleTimeString('en-UK')
+        const scheduled_landing_time = l.toLocaleTimeString('en-UK')
+        if(status === "landed"){
+            div.innerText = `Your flight has landed at: ${landing_time}`
+        }
+        else if(status === "active"){
+            div.innerText = `Your flight is due to land at: ${landing_time}`
+        }
+        else{
+            div.innerText = `Your flight is due to land at: ${scheduled_landing_time}`
+        }
+        
+        estimatedTimeDiv.appendChild(div)
+
+    }
+
+
+
 
     const createPickup = (pickupData) => {
 
