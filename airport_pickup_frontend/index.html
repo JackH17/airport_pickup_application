@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+
+
+    <div>
+        <form id = "new-driver-form">
+            <h3>Create New Driver</h3>
+            <input type="text" name="name" value="" placeholder="Driver Name" class="input-text">
+            <br>
+            <input type="submit" name="submit" value="Create new Driver" class="submit">
+        </form>
+    </div>
+
+    <div>
+            <form id = "new-pickup-form">
+                <h3>Create New Pickup</h3>
+                <input type="text" name="name" value="" placeholder="Passenger Name" class="input-text">
+                <br>
+                <input type="text" name="flightNumber" value="" placeholder="Flight Number" class="input-text">
+                <br>
+                <select id="airport-drop-down" name="airport">
+                    <option value="LHR">Heathrow</option>
+                    <option value="LGW">Gatwick</option>
+                    <option value="STN">Stansted</option>
+                    <option value="LCY">London City</option>
+                    
+                </select>
+                <br>
+                <input type="submit" name="submit" value="Create My PickUp" class="submit">
+            </form>
+        </div>
+    
+
+<script src="src/index.js"></script>
+</body>
+</html>
