@@ -1,25 +1,99 @@
-document.addEventListener('DOMContentLoaded', (event) => {
+const body = document.body
 
-    const mainPage = () =>{
-        let body = document.body
-        body.innerHTML = "";
-        const div = document.createElement("div")
-        div.id = "welcome"
-        const h3 = document.createElement("h3")
-        h3.innerText = "What would you like to do?"
-        const login_button = document.createElement("button")
-        login_button.id = "login"
-        login_button.innerText = "Login"
-        const submit_button = document.createElement("button")
-        submit_button.innerText = "Submit"
-        submit_button.id = "submit"
-        body.appendChild(div)
-        div.appendChild(h3)
-        div.appendChild(login_button)
-        div.appendChild(submit_button)
-        
-    }
+document.addEventListener('DOMContentLoaded', (event) => {
     mainPage();
+})
+
+const mainPage = () =>{
+    body.innerHTML = "";
+    const div = document.createElement("div")
+    const h3 = document.createElement("h3")
+    const login_button = document.createElement("button")
+    const signup_option = document.createElement("button")
+    div.id = "welcome"
+    h3.innerText = "What would you like to do?"
+    login_button.id = "login"
+    login_button.innerText = "Login"
+    signup_option.innerText = "Signup"
+    signup_option.id = "signup"
+    body.appendChild(div)
+    div.appendChild(h3)
+    div.appendChild(login_button)
+    div.appendChild(signup_option) 
+    login_button.addEventListener("click", function(){
+        Login();
+    })
+}
+
+const Login = () => {
+    body.innerHTML = ""
+    const div = document.createElement("div")
+    const sub_div1 = document.createElement("div")
+    const sub_div2 = document.createElement("div")
+    const username_input = document.createElement("input")
+    const password = document.createElement("input")
+    const submit_login_button = document.createElement("button")
+    const form = document.createElement("form")
+    submit_login_button.innerText = "Login"
+    
+    sub_div1.innerText = "Username: "
+    sub_div2.innerText = "Password "
+    
+    username_input.placeholder = "Enter your username"
+    username_input.id = "username_input"
+    username_input.type = "text"
+    
+    password.placeholder = "Password"
+    password.id = "password_input"
+    password.type = "password"
+
+    sub_div1.appendChild(username_input)
+    sub_div2.appendChild(password)
+    
+    body.appendChild(div)
+    div.appendChild(form)
+    form.appendChild(sub_div1)
+    form.appendChild(sub_div2)
+    form.appendChild(submit_login_button)
+    
+    submit_login_button.addEventListener("click", function(){
+        fetchDrivers()
+    })
+}
+    
+
+    const fetchDrivers = () =>{
+        let driverArray = []
+        fetch("http://localhost:3000/drivers",)
+        .then(response => response.json())
+        .then(drivers => {
+            drivers.forEach(driver => { 
+                driverArray.push(driver)
+            })
+        })
+        validateLogin(driverArray);
+    }
+
+    const validateLogin = (driverArray) =>{
+
+        let username = document.querySelector("#username_input")
+        let password = document.querySelector("#password_input")
+        username.required = true;
+        password.required = true;
+
+        for(let i=0;i < driverArray.length;i++){
+            if(driverArray[i].username === username && driverArray[i].password === password)
+            {
+                console.log("Hello")
+            }
+            else{
+                let h3 = document.createElement("h3")
+                h3.innerText = "User not found"
+            }
+        }
+
+    }
+
 
     // console.log('hello')
 
@@ -145,7 +219,3 @@ document.addEventListener('DOMContentLoaded', (event) => {
     //     .then(response => response.json())
     //     .then(console.log)
     // }
-
-
-    
-});
