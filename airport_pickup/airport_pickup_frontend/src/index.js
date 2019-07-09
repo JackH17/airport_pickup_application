@@ -1,41 +1,130 @@
+const body = document.body
+
 document.addEventListener('DOMContentLoaded', (event) => {
+    mainPage();
+})
 
-    console.log('hello')
+const mainPage = () =>{
+    body.innerHTML = "";
+    const div = document.createElement("div")
+    const h3 = document.createElement("h3")
+    const login_button = document.createElement("button")
+    const signup_option = document.createElement("button")
+    div.id = "welcome"
+    h3.innerText = "What would you like to do?"
+    login_button.id = "login"
+    login_button.innerText = "Login"
+    signup_option.innerText = "Signup"
+    signup_option.id = "signup"
+    body.appendChild(div)
+    div.appendChild(h3)
+    div.appendChild(login_button)
+    div.appendChild(signup_option) 
+    login_button.addEventListener("click", function(){
+        Login();
+    })
+}
 
-    const currentDriver = { id: 1, username: "new" }
+const Login = () => {
+    body.innerHTML = ""
+    const div = document.createElement("div")
+    const sub_div1 = document.createElement("div")
+    const sub_div2 = document.createElement("div")
+    const username_input = document.createElement("input")
+    const password = document.createElement("input")
+    const submit_login_button = document.createElement("button")
+    const form = document.createElement("form")
+    submit_login_button.innerText = "Login"
+    
+    sub_div1.innerText = "Username: "
+    sub_div2.innerText = "Password "
+    
+    username_input.placeholder = "Enter your username"
+    username_input.id = "username_input"
+    username_input.type = "text"
+    
+    password.placeholder = "Password"
+    password.id = "password_input"
+    password.type = "password"
 
-    const DRIVERS_URL = 'http://localhost:3000/drivers'
-    const AIRPORTS_URL = 'http://localhost:3000/airports'
-    const PICKUPS_URL = 'http://localhost:3000/pickups'
+    sub_div1.appendChild(username_input)
+    sub_div2.appendChild(password)
+    
+    body.appendChild(div)
+    div.appendChild(form)
+    form.appendChild(sub_div1)
+    form.appendChild(sub_div2)
+    form.appendChild(submit_login_button)
+    
+    submit_login_button.addEventListener("click", function(){
+        fetchDrivers()
+    })
+}
+    
 
-    const apiKey = 'e5afcd-79f8bd'
+    const fetchDrivers = () =>{
+        let driverArray = []
+        fetch("http://localhost:3000/drivers",)
+        .then(response => response.json())
+        .then(drivers => {
+            drivers.forEach(driver => { 
+                driverArray.push(driver)
+            })
+        })
+        validateLogin(driverArray);
+    }
+
+    const validateLogin = (driverArray) =>{
+
+        let username = document.querySelector("#username_input")
+        let password = document.querySelector("#password_input")
+        username.required = true;
+        password.required = true;
+
+        for(let i=0;i < driverArray.length;i++){
+            if(driverArray[i].username === username && driverArray[i].password === password)
+            {
+                console.log("Hello")
+            }
+            else{
+                let h3 = document.createElement("h3")
+                h3.innerText = "User not found"
+            }
+        }
+
+    }
 
     const newDriverForm = document.querySelector('#new-driver-form')
     const newPickUpForm = document.querySelector('#new-pickup-form')
     const estimatedTimeDiv = document.querySelector('#estimated-arrival')
     const addedWaitTimeDiv = document.querySelector('#added-wait-time')
 
-    newPickUpForm.addEventListener('submit', event => {
-        event.preventDefault()
+    // console.log('hello')
 
-        console.log('submit')
+    // const currentDriver = { id: 1, username: "new" }
 
-        const passengerName = event.target.elements.name.value
-        const flightNumber = event.target.elements.flightNumber.value
-        const driver = currentDriver.id
-        const selectedAirport = document.querySelector('#airport-drop-down')
-        const airport = selectedAirport.selectedIndex + 1 ;
+    // const DRIVERS_URL = 'http://localhost:3000/drivers'
+    // const AIRPORTS_URL = 'http://localhost:3000/airports'
+    // const PICKUPS_URL = 'http://localhost:3000/pickups'
 
+    // const apiKey = 'e5afcd-79f8bd'
 
-       const airportCode = event.target.elements.airport.value
+    // const newDriverForm = document.querySelector('#new-driver-form')
+    // const newPickUpForm = document.querySelector('#new-pickup-form')
+    // const estimatedTimeDiv = document.querySelector('#estimated-arrival')
 
+    // newPickUpForm.addEventListener('submit', event => {
+    //     event.preventDefault()
 
-        getFlightInfo(airportCode, flightNumber)
+    //     console.log('submit')
 
-        createPickup({passenger_name: passengerName, flight_number: flightNumber, driver_id: driver, airport_id: airport})
-    })
+    //     const passengerName = event.target.elements.name.value
+    //     const flightNumber = event.target.elements.flightNumber.value
+    //     const driver = currentDriver.id
+    //     const selectedAirport = document.querySelector('#airport-drop-down')
+    //     const airport = selectedAirport.selectedIndex + 1 ;
 
-    const getFlightInfo = (airportCode, flightNumber) => {
+    //     console.log(airport)
 
         fetch(`http://aviation-edge.com/v2/public/timetable?key=${apiKey}&iataCode=${airportCode}&type=arrival`)
             .then(response => response.json())
@@ -138,45 +227,43 @@ document.addEventListener('DOMContentLoaded', (event) => {
     }
 
 
-    const createPickup = (pickupData) => {
+    // const createPickup = (pickupData) => {
 
-        console.log(pickupData)
+    //     console.log(pickupData)
 
-        fetch(PICKUPS_URL, {
-            method: 'POST', 
-            headers: {
-                'Content-Type': 'application/json'
-            }, 
-            body: JSON.stringify(pickupData)
-        })
-        .then(response => response.json())
-        .then(console.log)
-    }
+    //     fetch(PICKUPS_URL, {
+    //         method: 'POST', 
+    //         headers: {
+    //             'Content-Type': 'application/json'
+    //         }, 
+    //         body: JSON.stringify(pickupData)
+    //     })
+    //     .then(response => response.json())
+    //     .then(console.log)
+    // }
 
-    newDriverForm.addEventListener('submit', event => {
+    // newDriverForm.addEventListener('submit', event => {
 
-        event.preventDefault()
+    //     event.preventDefault()
 
-        debugger
+    //     debugger
 
-        const driverName = event.target.elements.name.value
+    //     const driverName = event.target.elements.name.value
 
-        createDriver({username: driverName})
+    //     createDriver({username: driverName})
 
-        console.log('submit')
-    })
+    //     console.log('submit')
+    // })
 
-    const createDriver = driverData => {
+    // const createDriver = driverData => {
 
-        fetch(DRIVERS_URL, {
-            method: 'POST', 
-            headers: {
-                'Content-Type': 'application/json'
-            }, 
-            body: JSON.stringify(driverData)
-        })
-        .then(response => response.json())
-        .then(console.log)
-    }
-    
-});
+    //     fetch(DRIVERS_URL, {
+    //         method: 'POST', 
+    //         headers: {
+    //             'Content-Type': 'application/json'
+    //         }, 
+    //         body: JSON.stringify(driverData)
+    //     })
+    //     .then(response => response.json())
+    //     .then(console.log)
+    // }
