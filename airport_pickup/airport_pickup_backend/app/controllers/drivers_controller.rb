@@ -5,17 +5,17 @@ class DriversController < ApplicationController
 
     def index 
        @driver = Driver.all
-       render json: @driver, except: [:created_at, :updated_at]
+       render json: @driver, except: [:created_at, :updated_at], include: [:pickups]
     end 
 
     def create 
         @driver = Driver.create!(driver_params)
-        render json: @driver
+        render json: @driver, except: [:created_at, :updated_at]
     end 
 
     def show 
         @driver = Driver.find(params[:id])
-        render json: @driver
+        render json: @driver, include: [:pickups]
     end 
 
     def destroy 

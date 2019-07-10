@@ -4,40 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+    <!--Import materialize.css-->
+    <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
     <title>Document</title>
 </head>
 <body>
-    <div>
-        <form id = "new-driver-form">
-            <h3>Create New Driver</h3>
-            <input type="text" name="name" value="" placeholder="Driver Name" class="input-text">
-            <br>
-            <input type="submit" name="submit" value="Create new Driver" class="submit">
-        </form>
-    </div>
-
-    <div>
-            <form id = "new-pickup-form">
-                <h3>Create New Pickup</h3>
-                <input type="text" name="name" value="" placeholder="Passenger Name" class="input-text">
-                <br>
-                <input type="text" name="flightNumber" value="" placeholder="Flight Number" class="input-text">
-                <br>
-                <select id="airport-drop-down" name="airport">
-                    <option value="LHR">Heathrow</option>
-                    <option value="LGW">Gatwick</option>
-                    <option value="STN">Stansted</option>
-                    <option value="LCY">London City</option>
-                    
-                </select>
-                <br>
-                <input type="submit" name="submit" value="Create My PickUp" class="submit">
-            </form>
-
-            <div id="estimated-arrival"></div>
-        </div>
-    
-
-<script src="src/index.js"></script>
+        <nav>
+            <div class="nav-wrapper">
+                  <a href="#!" class="brand-logo center">Logo</a>
+                  <ul class="left hide-on-med-and-down">
+                    <li><a href="sass.html">Sass</a></li>
+                    <li><a href="badges.html">Components</a></li>
+                    <li class="active"><a href="collapsible.html">JavaScript</a></li>
+                  </ul>
+                </div>
+        </nav>
+        <script type="text/javascript" src="js/materialize.min.js"></script>
+        <script src="src/index.js"></script>
 </body>
 </html>

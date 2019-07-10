@@ -15,7 +15,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
 })
 
 const mainPage = () =>{
-    body.innerHTML = "";
     const div = document.createElement("div")
     const h3 = document.createElement("h3")
     const login_button = document.createElement("button")
@@ -93,8 +92,8 @@ signup = () => {
 
     form.appendChild(sign_up_button)
 
-    sign_up_button.addEventListener('click', function() {
-
+    sign_up_button.addEventListener('click', function(e) {
+        e.preventDefault()
         let username = document.querySelector("#username_input").value
         let password = document.querySelector("#password_input").value
         let firstName = document.querySelector("#first_name_input").value
@@ -102,7 +101,6 @@ signup = () => {
 
         let newDriverData = {username: username, password: password, firstname: firstName, lastname: lastName}
         createNewDriver(newDriverData)
-        
     })
 
 }
@@ -113,49 +111,38 @@ const createNewDriver = newDriverData => {
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
-
         }, 
         body: JSON.stringify(newDriverData)
-    })
-    .then(response => response.json())
+    }).then(response => response.json())
+    .then(data => greetNewDriver(data))
 }
 
-// const showNewDriver = newDriver => {
-
-//     console.log(newDriver)
-// }
-
-// const greetNewDriver = () => {
-
-  
-
-//     body.innerHTML = ""
 
 
-  
+const greetNewDriver = (driver) => {
 
-//     newDriverWelcomeDiv = document.createElement('div')
+    body.innerHTML = ""
+    let currentDriver = driver;
+    debugger
+    newDriverWelcomeDiv = document.createElement('div')
 
-//     newDriverWelcomeMessage = document.createElement('p')
-//     newDriverWelcomeMessage.innerText = `Welcome ${currentDriver.firstname}`
-//     newDriverWelcomeDiv.appendChild(newDriverWelcomeMessage)
+    newDriverWelcomeMessage = document.createElement('p')
+    newDriverWelcomeMessage.innerText = `Welcome ${currentDriver.firstname}`
+    newDriverWelcomeDiv.appendChild(newDriverWelcomeMessage)
 
-//     newDriverNewPickups = document.createElement('p')
-//     newDriverNewPickups.innerText = `Make your first Pickup`
-//     newDriverWelcomeDiv.appendChild(newDriverNewPickups)
+    newDriverNewPickups = document.createElement('p')
+    newDriverNewPickups.innerText = `Make your first Pickup`
+    newDriverWelcomeDiv.appendChild(newDriverNewPickups)
 
-//     // newDriverNewPickups.addEventListener('click', event => {
+    newDriverNewPickups.addEventListener('click', event => {
+        event.preventDefault()
+        getPickUpInfo(currentDriver);
 
-//     //     console.log('click')
+    })
 
-//     // })
+    body.appendChild(newDriverWelcomeDiv)
 
-//     body.appendChild(newDriverWelcomeDiv)
-
-    
-
-
-// }
+}
 
 
 
@@ -227,7 +214,6 @@ const Login = () => {
         }
         else{
             currentDriver = driverArray[flag]
-            debugger
             console.log(currentDriver)
             greetDriver(currentDriver)
         }
@@ -254,8 +240,9 @@ const Login = () => {
         createNewPickup.innerText = 'Create new Pickup'
         welcomeDiv.appendChild(createNewPickup)
         createNewPickup.addEventListener('click', event => {
-            console.log('i was clicked')
-            createPickup(currentDriver)
+            event.preventDefault()
+            getPickUpInfo(currentDriver)
+            debugger
         })
 
 
@@ -265,14 +252,178 @@ const Login = () => {
 
     const viewUserPickups = currentDriver => {
 
-        console.log(`${currentDriver.firstname} pickups`)
+        fetch(`${DRIVERS_URL}/${currentDriver.id}`)
+        .then(response => response.json())
+        .then(driverInfo => showPickups(driverInfo))
+    }
+
+    const showPickups = driverInfo => {
+
+        body.innerHTML = ""
+
+        const pickupList = document.createElement('ul')
+
+        driverInfo.pickups.forEach(pickup => {
+            liItem = document.createElement('li')
+            liItem.innerText = pickup.passenger_name 
+            pickupList.appendChild(liItem)
+        })
+        div_button.appendChild(return_button)
+        body.appendChild(pickupList)
+        body.appendChild(return_button)
+        
+        debugger
+
+        console.log(driverInfo)
+    }
+
+
+ const getPickUpInfo = driverData => {
+        debugger
+     
+        body.innerHTML = ""
+     
+        const newPickupDiv = document.createElement('div')
+     
+        const newPickUpForm = document.createElement('form')
+        newPickUpForm.id = 'new-pickup-form'
+     
+        const passenegerNameInput = document.createElement('input')
+        passenegerNameInput.placeholder = 'Passenger name'
+        passenegerNameInput.name = 'passengerName'
+        newPickUpForm.appendChild(passenegerNameInput)
+     
+        const flightNumber = document.createElement('input')
+        flightNumber.placeholder = 'Flight Number'
+        flightNumber.name = 'flightNumber'
+        newPickUpForm.appendChild(flightNumber)
+     
+        const arrivalAirport = document.createElement('select')
+        arrivalAirport.id = 'airport-drop-down'
+        arrivalAirport.name = 'airport'
+     
+        const heathrow = document.createElement('option')
+        heathrow.innerText = 'Heathrow'
+        heathrow.value = 'LHR'
+        arrivalAirport.appendChild(heathrow)
+     
+        const gatwick = document.createElement('option')
+        gatwick.innerText = 'Gatwick'
+        gatwick.value = 'LGW'
+        arrivalAirport.appendChild(gatwick)
+     
+        const londonStansted = document.createElement('option')
+        londonStansted.innerText = 'London Stansted'
+        londonStansted.value = 'STN'
+        arrivalAirport.appendChild(londonStansted)
+     
+        const londonCity = document.createElement('option')
+        londonCity.innerText = 'London City'
+        londonCity.value = 'LCY'
+        arrivalAirport.appendChild(londonCity)
+     
+        const pickupSubmit = document.createElement('input')
+        pickupSubmit.type = 'submit'
+        arrivalAirport.appendChild(pickupSubmit)
+        button = document.createElement("button")
+     
+        newPickUpForm.appendChild(arrivalAirport)
+     
+     
+        newPickupDiv.appendChild(newPickUpForm)
+        body.appendChild(newPickupDiv)
+     
+     
+     
+        newPickUpForm.addEventListener('submit', event => {
+     
+            event.preventDefault()
+     
+     
+            const passengerName = event.target.elements.passengerName.value
+            const flightNumber = event.target.elements.flightNumber.value
+            const driver = driverData.id
+            const selectedAirport = document.querySelector('#airport-drop-down')
+            const airport = selectedAirport.selectedIndex + 1 ;
+            const airportCode = event.target.elements.airport.value
+     
+            console.log(airport)
+     
+     
+            console.log('submit')
+     
+            const pickUpData = ({passenger_name: passengerName, flight_number: flightNumber, driver_id: driver, airport_id: airport})
+     
+            createPickup(pickUpData)
+     
+            showPickUpInfo(airportCode, flightNumber)
+    })
+}
+
+
+    const createPickup = (pickupData) => {
+        debugger
+        console.log(pickupData)
+        fetch(PICKUPS_URL, {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json'
+            }, 
+            body: JSON.stringify(pickupData)
+        })
+        .then(response => response.json())
+        .then(data => console.log(data))
+    }
+
+    const showPickUpInfo = (airportCode, flightNumber) => {
+
+        fetch(`http://aviation-edge.com/v2/public/timetable?key=${apiKey}&iataCode=${airportCode}&type=arrival`)
+         .then(response => response.json())
+         .then(data => findFlight(data, flightNumber))
+    }
+
+    const findFlight = (flightData, flightNumber) => {
+
+        console.log(flightData)
+           console.log(flightNumber)
+           const new_array = []
+           let status;
+           for(let i=0;i < flightData.length;i++)
+           {
+               if(flightData[i].flight.iataNumber === flightNumber)
+               {
+                   status = flightData[i].status
+                   new_array.push(flightData[i].arrival)
+               }
+           }
+           estimatedTime(new_array,status);
 
     }
 
-    const createPickup = currentDriver => {
+    const estimatedTime = (new_array,status) => {
 
-        console.log(`${currentDriver.firstname} new pickups`)
+        console.log(status)
+        body.innerHTML = ""
+        div = document.createElement("div")
+        let d = new Date(new_array[0].estimatedTime)
+        let l = new Date(new_array[0].scheduledTime)
+        const landing_time = d.toLocaleTimeString('en-UK')
+        const scheduled_landing_time = l.toLocaleTimeString('en-UK')
+        if(status === "landed"){
+            div.innerText = `Your flight has landed at: ${landing_time}`
+        }
+        else if(status === "active"){
+            div.innerText = `Your flight is due to land at: ${landing_time}`
+        }
+        else{
+            div.innerText = `Your flight is due to land at: ${scheduled_landing_time}`
+        }
+        
+        body.appendChild(div)
+
     }
+
+
 
 
     // console.log('hello')
@@ -352,20 +503,7 @@ const Login = () => {
 
 
 
-    // const createPickup = (pickupData) => {
 
-    //     console.log(pickupData)
-
-    //     fetch(PICKUPS_URL, {
-    //         method: 'POST', 
-    //         headers: {
-    //             'Content-Type': 'application/json'
-    //         }, 
-    //         body: JSON.stringify(pickupData)
-    //     })
-    //     .then(response => response.json())
-    //     .then(console.log)
-    // }
 
     // newDriverForm.addEventListener('submit', event => {
 
@@ -380,3 +518,4 @@ const Login = () => {
     //     console.log('submit')
     // })
 
+   
