@@ -7,9 +7,6 @@ const PICKUPS_URL = 'http://localhost:3000/pickups'
 
 const apiKey = 'e5afcd-79f8bd'
 
-
-
-
 document.addEventListener('DOMContentLoaded', (event) => {
     mainPage();
 })
@@ -381,75 +378,6 @@ const Login = () => {
          .then(response => response.json())
          .then(data => findFlight(data, flightNumber))
     }
-
-    const findFlight = (flightData, flightNumber) => {
-
-        console.log(flightData)
-           console.log(flightNumber)
-           const new_array = []
-           let status;
-           for(let i=0;i < flightData.length;i++)
-           {
-               if(flightData[i].flight.iataNumber === flightNumber)
-               {
-                   status = flightData[i].status
-                   new_array.push(flightData[i].arrival)
-               }
-           }
-           estimatedTime(new_array,status);
-
-    }
-
-    const estimatedTime = (new_array,status) => {
-
-        console.log(status)
-        body.innerHTML = ""
-        div = document.createElement("div")
-        let d = new Date(new_array[0].estimatedTime)
-        let l = new Date(new_array[0].scheduledTime)
-        const landing_time = d.toLocaleTimeString('en-UK')
-        const scheduled_landing_time = l.toLocaleTimeString('en-UK')
-        if(status === "landed"){
-            div.innerText = `Your flight has landed at: ${landing_time}`
-        }
-        else if(status === "active"){
-            div.innerText = `Your flight is due to land at: ${landing_time}`
-        }
-        else{
-            div.innerText = `Your flight is due to land at: ${scheduled_landing_time}`
-        }
-        
-        body.appendChild(div)
-
-    }
-
-
-
-
-    // console.log('hello')
-
-
-    // const newDriverForm = document.querySelector('#new-driver-form')
-    // const newPickUpForm = document.querySelector('#new-pickup-form')
-    // const estimatedTimeDiv = document.querySelector('#estimated-arrival')
-
-    // newPickUpForm.addEventListener('submit', event => {
-    //     event.preventDefault()
-
-    //     console.log('submit')
-
-    //     const passengerName = event.target.elements.name.value
-    //     const flightNumber = event.target.elements.flightNumber.value
-    //     const driver = currentDriver.id
-    //     const selectedAirport = document.querySelector('#airport-drop-down')
-    //     const airport = selectedAirport.selectedIndex + 1 ;
-
-    //     console.log(airport)
-
-        fetch(`http://aviation-edge.com/v2/public/timetable?key=${apiKey}&iataCode=${airportCode}&type=arrival`)
-            .then(response => response.json())
-            .then(data => findFlight(data, flightNumber))
-    }
     
     const findFlight = (flightData, flightNumber) => {
        
@@ -531,8 +459,6 @@ const Login = () => {
         estimatedTimeDiv.appendChild(div)
     }
 
-
-
     const convertTime = time => {
         const compareTime = (time.toISOString())
 
@@ -545,21 +471,3 @@ const Login = () => {
         console.log(time)
         console.log(compareTime)
     }
-
-
-
-
-    // newDriverForm.addEventListener('submit', event => {
-
-    //     event.preventDefault()
-
-    //     debugger
-
-    //     const driverName = event.target.elements.name.value
-
-    //     createDriver({username: driverName})
-
-    //     console.log('submit')
-    // })
-
-   
