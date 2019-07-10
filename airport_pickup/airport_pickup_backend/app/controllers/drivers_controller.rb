@@ -1,6 +1,6 @@
 class DriversController < ApplicationController
 
-    before_action :set_driver, only: [:show, :destroy]
+    # before_action :set_driver, only: [:show, :destroy]
 
 
     def index 
@@ -14,6 +14,7 @@ class DriversController < ApplicationController
     end 
 
     def show 
+        @driver = Driver.find(params[:id])
         render json: @driver
     end 
 
@@ -24,7 +25,7 @@ class DriversController < ApplicationController
     private 
 
     def driver_params
-        params.require(:driver).permit(:username)
+        params.require(:driver).permit(:username, :password, :firstname, :lastname)
     end 
 
     def set_driver 

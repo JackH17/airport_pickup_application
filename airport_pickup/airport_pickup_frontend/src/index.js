@@ -1,4 +1,14 @@
 const body = document.body
+let currentDriver;
+
+const DRIVERS_URL = 'http://localhost:3000/drivers'
+const AIRPORTS_URL = 'http://localhost:3000/airports'
+const PICKUPS_URL = 'http://localhost:3000/pickups'
+
+const apiKey = 'e5afcd-79f8bd'
+
+
+
 
 document.addEventListener('DOMContentLoaded', (event) => {
     mainPage();
@@ -23,7 +33,132 @@ const mainPage = () =>{
     login_button.addEventListener("click", function(){
         Login();
     })
+    signup_option.addEventListener('click', event => {
+        console.log('click')
+        signup();
+    })
 }
+
+signup = () => {
+
+    body.innerHTML = ""
+    const div = document.createElement("div")
+    const sub_div1 = document.createElement("div")
+    const sub_div2 = document.createElement("div")
+    const sub_div3 = document.createElement("div")
+    const sub_div4 = document.createElement("div")
+    const username_input = document.createElement("input")
+    const password = document.createElement("input")
+    const first_name_input = document.createElement("input")
+    const last_name_input = document.createElement("input")
+    const sign_up_button = document.createElement("button")
+    const form = document.createElement("form")
+    sign_up_button.innerText = "Sign Up"
+
+    
+    sub_div1.innerText = "First Name"
+    sub_div2.innerText = "Last Name"
+    sub_div3.innerText = "Username"
+    sub_div4.innerText = "Password "
+
+    first_name_input.placeholder = "Enter your First Name"
+    first_name_input.id = "first_name_input"
+    first_name_input.type = "text"
+    
+    last_name_input.placeholder = "Enter your Last Name"
+    last_name_input.id = "last_name_input"
+    last_name_input.type = "text"
+
+    
+
+    username_input.placeholder = "Enter your username"
+    username_input.id = "username_input"
+    username_input.type = "text"
+    
+    password.placeholder = "Password"
+    password.id = "password_input"
+    password.type = "password"
+    
+    sub_div1.appendChild(first_name_input)
+    sub_div2.appendChild(last_name_input)
+    sub_div3.appendChild(username_input)
+    sub_div4.appendChild(password)
+
+    body.appendChild(div)
+    div.appendChild(form)
+    form.appendChild(sub_div1)
+    form.appendChild(sub_div2)
+    form.appendChild(sub_div3)
+    form.appendChild(sub_div4)
+
+    form.appendChild(sign_up_button)
+
+    sign_up_button.addEventListener('click', function() {
+
+        let username = document.querySelector("#username_input").value
+        let password = document.querySelector("#password_input").value
+        let firstName = document.querySelector("#first_name_input").value
+        let lastName = document.querySelector("#last_name_input").value
+
+        let newDriverData = {username: username, password: password, firstname: firstName, lastname: lastName}
+        createNewDriver(newDriverData)
+        
+    })
+
+}
+
+const createNewDriver = newDriverData => {
+    return fetch(DRIVERS_URL, {
+        method: 'POST', 
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+
+        }, 
+        body: JSON.stringify(newDriverData)
+    })
+    .then(response => response.json())
+}
+
+// const showNewDriver = newDriver => {
+
+//     console.log(newDriver)
+// }
+
+// const greetNewDriver = () => {
+
+  
+
+//     body.innerHTML = ""
+
+
+  
+
+//     newDriverWelcomeDiv = document.createElement('div')
+
+//     newDriverWelcomeMessage = document.createElement('p')
+//     newDriverWelcomeMessage.innerText = `Welcome ${currentDriver.firstname}`
+//     newDriverWelcomeDiv.appendChild(newDriverWelcomeMessage)
+
+//     newDriverNewPickups = document.createElement('p')
+//     newDriverNewPickups.innerText = `Make your first Pickup`
+//     newDriverWelcomeDiv.appendChild(newDriverNewPickups)
+
+//     // newDriverNewPickups.addEventListener('click', event => {
+
+//     //     console.log('click')
+
+//     // })
+
+//     body.appendChild(newDriverWelcomeDiv)
+
+    
+
+
+// }
+
+
+
 
 const Login = () => {
     body.innerHTML = ""
@@ -56,54 +191,92 @@ const Login = () => {
     form.appendChild(sub_div2)
     form.appendChild(submit_login_button)
     
-    submit_login_button.addEventListener("click", function(){
+    submit_login_button.addEventListener("click", function(e){
+        e.preventDefault()
         fetchDrivers()
     })
 }
     
 
     const fetchDrivers = () =>{
-        let driverArray = []
-        fetch("http://localhost:3000/drivers",)
+        fetch(DRIVERS_URL)
         .then(response => response.json())
         .then(drivers => {
-            drivers.forEach(driver => { 
-                driverArray.push(driver)
-            })
+            validateLogin(drivers);
         })
-        validateLogin(driverArray);
     }
 
     const validateLogin = (driverArray) =>{
+        let username = document.querySelector("#username_input").value
+        let password = document.querySelector("#password_input").value
 
-        let username = document.querySelector("#username_input")
-        let password = document.querySelector("#password_input")
         username.required = true;
         password.required = true;
-
-        for(let i=0;i < driverArray.length;i++){
+        let flag = -1;
+        for(i=0;i < driverArray.length;i++)
+        {
             if(driverArray[i].username === username && driverArray[i].password === password)
-            {
-                console.log("Hello")
-            }
-            else{
-                let h3 = document.createElement("h3")
-                h3.innerText = "User not found"
+            {   
+                flag = i
             }
         }
+        if(flag === -1)
+        {
+            window.alert("User not found")
+            Login()
+        }
+        else{
+            currentDriver = driverArray[flag]
+            debugger
+            console.log(currentDriver)
+            greetDriver(currentDriver)
+        }
+    }
 
+    const greetDriver = currentDriver => {
+        body.innerHTML = ""
+        welcomeDiv = document.createElement('div')
+        welcomeMessage = document.createElement('p')
+        welcomeMessage.innerText = `Welcome Back ${currentDriver.firstname}`
+        welcomeDiv.appendChild(welcomeMessage)
+
+
+        currentPickups = document.createElement('p')
+        currentPickups.innerText = 'View your PickUps'
+        welcomeDiv.appendChild(currentPickups)
+        currentPickups.addEventListener('click', event => {
+            console.log('i was clicked')
+            viewUserPickups(currentDriver)
+        })
+
+
+        createNewPickup = document.createElement('p')
+        createNewPickup.innerText = 'Create new Pickup'
+        welcomeDiv.appendChild(createNewPickup)
+        createNewPickup.addEventListener('click', event => {
+            console.log('i was clicked')
+            createPickup(currentDriver)
+        })
+
+
+
+        body.appendChild(welcomeDiv)
+    }
+
+    const viewUserPickups = currentDriver => {
+
+        console.log(`${currentDriver.firstname} pickups`)
+
+    }
+
+    const createPickup = currentDriver => {
+
+        console.log(`${currentDriver.firstname} new pickups`)
     }
 
 
     // console.log('hello')
 
-    // const currentDriver = { id: 1, username: "new" }
-
-    // const DRIVERS_URL = 'http://localhost:3000/drivers'
-    // const AIRPORTS_URL = 'http://localhost:3000/airports'
-    // const PICKUPS_URL = 'http://localhost:3000/pickups'
-
-    // const apiKey = 'e5afcd-79f8bd'
 
     // const newDriverForm = document.querySelector('#new-driver-form')
     // const newPickUpForm = document.querySelector('#new-pickup-form')
@@ -207,15 +380,3 @@ const Login = () => {
     //     console.log('submit')
     // })
 
-    // const createDriver = driverData => {
-
-    //     fetch(DRIVERS_URL, {
-    //         method: 'POST', 
-    //         headers: {
-    //             'Content-Type': 'application/json'
-    //         }, 
-    //         body: JSON.stringify(driverData)
-    //     })
-    //     .then(response => response.json())
-    //     .then(console.log)
-    // }

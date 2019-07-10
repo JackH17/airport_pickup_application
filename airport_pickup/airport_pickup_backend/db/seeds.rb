@@ -6,9 +6,8 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
-Airport.delete_all
-Driver.delete_all
 
 airports = Airport.create([{name: 'Heathrow Airport', code: 'LHR', status:'open'}, {name: 'Gatwick Airport', code: 'LGW', status:'open'}, {name: 'Stansted Airport', code: 'STN', status:'open'}, {name: 'London City Airport', code: 'LCY', status:'open'}])
 
-currentDriver = Driver.create({id: 1, username: "new"})
+currentDriver = Driver.create({firstname: "jack", lastname: "nicholson", username: "new", password:"password"})
+currentDriver2 = Driver.create({firstname: "pedro", lastname: "nicholson", username: "new1", password:"password"})
