@@ -328,23 +328,57 @@ const Login = () => {
 
         body.innerHTML = ""
 
+        const showAllPickipDiv = document.createElement('div')
+
         const pickupList = document.createElement('ul')
 
         driverInfo.pickups.forEach(pickup => {
             liItem = document.createElement('li')
             liItem.innerText = pickup.passenger_name 
             pickupList.appendChild(liItem)
+
+            let pickupResolved = document.createElement('button')
+            pickupResolved.innerText = 'pickUp made'
+            pickupList.appendChild(pickupResolved)
+
+            pickupResolved.addEventListener('click', event => {
+                console.log('click')
+                resolveThisPickup(pickup, liItem)
+            }) 
         })
+<<<<<<< HEAD
         body.appendChild(pickupList)
         
         debugger
+=======
+>>>>>>> 239b02890ef9969bdfbc29565274ab1bf5a844dd
 
+        const return_button = document.createElement('button')
+        return_button.innerText = 'return to Pickup Profile'
+        pickupList.appendChild(return_button)
+
+        return_button.addEventListener('click', event => {
+            console.log('click')
+            greetDriver(currentDriver)
+        })
+
+
+
+        showAllPickipDiv.appendChild(pickupList)
+
+        body.appendChild(showAllPickipDiv)
         console.log(driverInfo)
     }
 
+    const resolveThisPickup = (pickupInfo, liItem) => {
 
- const getPickUpInfo = driverData => {
-        debugger
+        console.log(liItem)
+    }
+
+
+
+    const getPickUpInfo = driverData => {
+  
      
         body.innerHTML = ""
      
@@ -427,6 +461,10 @@ const Login = () => {
 
 
     const createPickup = (pickupData) => {
+<<<<<<< HEAD
+=======
+
+>>>>>>> 239b02890ef9969bdfbc29565274ab1bf5a844dd
         console.log(pickupData)
         fetch(PICKUPS_URL, {
             method: 'POST', 
@@ -469,10 +507,34 @@ const Login = () => {
         console.log(status)
         body.innerHTML = ""
         div = document.createElement("div")
+
+        // let newPickUpDiv = document.createElement("div")
+        // let viewPickupDiv = document.createElement("div")
+
+        // viewPickUpDiv.innerText = 'view all pickups'
+        // newPickupDiv.innerText = 'create new pickup'
+
+        // div.appendChild(viewPickUpDiv)
+        // div.appendChild(newPickUpDiv)
+
+        // viewPickUpDiv.addEventListener('click', event => {
+        //     event.preventDefault()
+        //     console.log('i was clicked')
+        //     viewUserPickups(currentDriver)
+        // })
+
+        // newPickupDiv.addEventListener('click', event => {
+        //     event.preventDefault()
+        //     getPickUpInfo(currentDriver)
+        // })
+
+
+
         let d = new Date(new_array[0].estimatedTime)
         let l = new Date(new_array[0].scheduledTime)
         const landing_time = d.toLocaleTimeString('en-UK')
         const scheduled_landing_time = l.toLocaleTimeString('en-UK')
+
         if(status === "landed"){
             div.innerText = `Your flight has landed at: ${landing_time}`
         }
@@ -482,7 +544,18 @@ const Login = () => {
         else{
             div.innerText = `Your flight is due to land at: ${scheduled_landing_time}`
         }
-        
+
+
+        const estimated_time_return_button = document.createElement('button')
+        estimated_time_return_button.innerText = 'return to Pickup Profile'
+        div.appendChild(estimated_time_return_button)
+
+        estimated_time_return_button.addEventListener('click', event => {
+            console.log('click')
+            greetDriver(currentDriver)
+        })
+
+
         body.appendChild(div)
 
     }
