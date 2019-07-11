@@ -417,6 +417,7 @@ const showPickups = driverInfo => {
             // }) 
         })
 
+
         const return_button = document.createElement('button')
         return_button.innerText = 'return to Pickup Profile'
         pickupList.appendChild(return_button)
@@ -715,6 +716,7 @@ const showPickups = driverInfo => {
 
 
 const flightCardDiv = document.querySelector('#flight-card-div')
+flightCardDiv.className = "timetable"
 
 
 // BUSINESS FEATURE

@@ -19,3 +19,13 @@ html{
 .btn{
     border-radius:4px;
 }
+
+.timetable{
+    background-color: black;
+}
+
+.li {
+    color: yellow;
+    font-family: 'Russo One', sans-serif;
+
+}
