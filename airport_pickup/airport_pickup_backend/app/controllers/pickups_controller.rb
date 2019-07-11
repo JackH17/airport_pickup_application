@@ -27,7 +27,7 @@ class PickupsController < ApplicationController
     private
 
     def pickup_params
-        params.require(:pickup).permit(:passenger_name, :flight_number, :driver_id)
+        params.require(:pickup).permit(:passenger_name, :flight_number, :driver_id, :airport_id)
     end
 
     def set_pickup

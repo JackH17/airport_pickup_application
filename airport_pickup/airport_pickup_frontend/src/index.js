@@ -4,35 +4,33 @@ let currentDriver;
 const DRIVERS_URL = 'http://localhost:3000/drivers'
 const AIRPORTS_URL = 'http://localhost:3000/airports'
 const PICKUPS_URL = 'http://localhost:3000/pickups'
-
+const BUSINESS_PICKUPS_URL = 'http://localhost:3000/business_pickups'
 const apiKey = 'e5afcd-79f8bd'
 
+
 const addedWaitTimeDiv = document.createElement('div')
+const fullFlightListDiv = document.createElement('div')
 
 
+document.addEventListener('DOMContentLoaded', event => {
 
-
-document.addEventListener('DOMContentLoaded', (event) => {
     mainPage();
-
-    //buisnessUserorPersonalUser();
 })
 
-//const = buisnessUserorPersonalUser => {
-    
-}
-
 const mainPage = () =>{
+
     const div = document.createElement("div")
     const h3 = document.createElement("h3")
     const login_button = document.createElement("button")
     const signup_option = document.createElement("button")
+
     div.id = "welcome"
     h3.innerText = "What would you like to do?"
     login_button.id = "login"
     login_button.innerText = "Login"
     signup_option.innerText = "Signup"
     signup_option.id = "signup"
+
     body.appendChild(div)
     div.appendChild(h3)
     div.appendChild(login_button)
@@ -45,10 +43,8 @@ const mainPage = () =>{
         signup();
     })
 }
-    const DRIVERS_URL = 'http://localhost:3000/drivers'
-    const AIRPORTS_URL = 'http://localhost:3000/airports'
-    const PICKUPS_URL = 'http://localhost:3000/pickups'
-    const BUSINESS_PICKUPS_URL = 'http://localhost:3000/business_pickups'
+
+    
 
 signup = () => {
 
@@ -65,129 +61,7 @@ signup = () => {
     const sign_up_button = document.createElement("button")
     const form = document.createElement("form")
     sign_up_button.innerText = "Sign Up"
-    const newDriverForm = document.querySelector('#new-driver-form')
-    const newPickUpForm = document.querySelector('#new-pickup-form')
-    const estimatedTimeDiv = document.querySelector('#estimated-arrival')
-    const flightNumberOnlyForm = document.querySelector('#flight-number-form')
-    const showFlightsDiv = document.getElementById("showFlightsDiv")
-    const div = document.getElementById("flight-list-div")
-    div.innerHTML = "My Active Landings"
-    const showMyFlightsButton = document.createElement("button")
-    showMyFlightsButton.innerHTML = "Show My Flights"
-    showFlightsDiv.append(showMyFlightsButton)
-
-
-
-    showMyFlightsButton.addEventListener("click", function(e){
-    div.innerHTML = ""
-    showCurrentFlights()
-
-    showMyFlightsButton.innerHTML = 'Refresh Landing Times'
-    })
-
-    const array = []
-    const gArray = []
-    const sArray = []
-    const cArray = []
-    const allLondonFlightsToday = []
-
-
-
-
-    function showCurrentFlights(){
-      // this runs when you hit the show flights button as it needs the data to be fetched before it can work :)
-      // it is going to match the data in our API with the flights API to get accurate times and data on any button hit
-      // once we have the flight data we can render the data to the page
-      const megaFlightsArray = allLondonFlightsToday.flat()
-      const freshFlightData = []
-      // console.log(megaFlightsArray)
-      fetch(BUSINESS_PICKUPS_URL)
-        .then(resp => resp.json())
-        .then(savedLandings => {
-          const myLandings = savedLandings.filter(function(landing) {
-            return landing.driver_id === currentDriver.id })
-            // console.log(myLandings)
-              myLandings.forEach(function(landing){
-                // for (let i=0; i<=megaFlightsArray.length; i++){
-                megaFlightsArray.forEach(function(flight){
-                  if (flight.flight.iataNumber === landing.flight_number){
-
-                      renderLanding(flight, landing)
-                    }
-
-                    // use flight number to get accurate landing data for my flights
-                    // renderLanding(landing)
-                })
-              })
-            })
-
-          }
-
-
-
-    function renderLanding(flight, landing){
-      // console.log(flight, landing)
-
-      let e = new Date(flight.arrival.estimatedTime)
-      let s = new Date(flight.arrival.scheduledTime)
-      const estimatedLandingTime = e.toLocaleTimeString('en-UK')
-      const scheduledLandingTime = s.toLocaleTimeString('en-UK')
-
-
-      const li = document.createElement("li")
-      li.className = "li"
-      const flightNumberSpan = document.createElement("span")
-      const statusSpan = document.createElement("span")
-      const timeSpan = document.createElement("span")
-      const airportSpan = document.createElement("span")
-      const terminalSpan = document.createElement("span")
-      const passengerSpan = document.createElement("span")
-      const button = document.createElement("button")
-//airport name, time,
-
-      if(flight.status === "landed"){
-          timeSpan.innerHTML = `Landed at: ${estimatedLandingTime} `
-      }
-      else if(flight.status === "active"){
-          timeSpan.innerHTML = `Estimated Landing Time: ${estimatedLandingTime} `
-      }
-      else{
-          timeSpan.innerHTML = `Scheduled Landing Time ${scheduledLandingTime} `
-      }
-      statusSpan.innerHTML = `Status: ${flight.status} `
-      airportSpan.innerHTML = `Airport: ${landing.airport.name}  `
-      // ${flight.arrival.iataCode}
-      terminalSpan.innerHTML = `Terminal: ${flight.arrival.terminal} `
-      passengerSpan.innerHTML = `Passenger: ${landing.passenger_name} `
-      flightNumberSpan.innerHTML = `Flight Number: ${flight.flight.iataNumber} `
-      button.innerHTML = "Delete Landing"
-
-      // const flightNumberMatched = flightArray[i].flight.iataNumber
-      // const status = flightArray[i].status
-      // const estimatedTime = flightArray[i].arrival.estimatedTime
-      // const scheduledTime = flightArray[i].arrival.scheduledTime
-      // const airport = flightArray[i].arrival.iataCode
-      // const terminal = flightArray[i].arrival.terminal
-
-      // createLanding({flight_number: flightNumber, status: status, time: time, code: code, terminal: terminal, passenger_name: passenger_name, driver_id: currentDriver.id}, button)
-      // createPickup({passenger_name: passengerName, flight_number: flightNumber, driver_id: currentDriver.id, airport_id: airport})
-
-      div.append(li)
-      li.append(flightNumberSpan, statusSpan, timeSpan, airportSpan, terminalSpan, passengerSpan, button)
-      button.addEventListener("click", function(e){
-        fetch(`${BUSINESS_PICKUPS_URL}/${landing.id}`, {
-          method: "DELETE"
-        })
-        .then(resp => resp.json())
-        .then(() => li.remove())
-      })
-      return div
-
-    }
-
-
-
-    
+ 
     sub_div1.innerText = "First Name"
     sub_div2.innerText = "Last Name"
     sub_div3.innerText = "Username"
@@ -222,7 +96,7 @@ signup = () => {
     form.appendChild(sub_div2)
     form.appendChild(sub_div3)
     form.appendChild(sub_div4)
-        const airportCode = event.target.elements.airport.value
+        // const airportCode = event.target.elements.airport.value
 
     form.appendChild(sign_up_button)
 
@@ -232,8 +106,8 @@ signup = () => {
         let password = document.querySelector("#password_input").value
         let firstName = document.querySelector("#first_name_input").value
         let lastName = document.querySelector("#last_name_input").value
-        getFlightInfo(airportCode, flightNumber)
-        // getFlightInfo2(flightNumber)
+        // getFlightInfo(airportCode, flightNumber)
+        // // getFlightInfo2(flightNumber)
 
         let newDriverData = {username: username, password: password, firstname: firstName, lastname: lastName}
         createNewDriver(newDriverData)
@@ -250,35 +124,34 @@ const createNewDriver = newDriverData => {
         }, 
         body: JSON.stringify(newDriverData)
     }).then(response => response.json())
-    .then(data => greetNewDriver(data))
+    .then(data => greetDriver(data))
 }
 
 
 
-const greetNewDriver = (driver) => {
+// const greetNewDriver = (driver) => {
+//     debugger
+//     body.innerHTML = ""
+//     let currentDriver = driver;
+//     newDriverWelcomeDiv = document.createElement('div')
 
-    body.innerHTML = ""
-    let currentDriver = driver;
- 
-    newDriverWelcomeDiv = document.createElement('div')
+//     newDriverWelcomeMessage = document.createElement('p')
+//     newDriverWelcomeMessage.innerText = `Welcome ${currentDriver.firstname}`
+//     newDriverWelcomeDiv.appendChild(newDriverWelcomeMessage)
 
-    newDriverWelcomeMessage = document.createElement('p')
-    newDriverWelcomeMessage.innerText = `Welcome ${currentDriver.firstname}`
-    newDriverWelcomeDiv.appendChild(newDriverWelcomeMessage)
+//     newDriverNewPickups = document.createElement('p')
+//     newDriverNewPickups.innerText = `Make your first Pickup`
+//     newDriverWelcomeDiv.appendChild(newDriverNewPickups)
 
-    newDriverNewPickups = document.createElement('p')
-    newDriverNewPickups.innerText = `Make your first Pickup`
-    newDriverWelcomeDiv.appendChild(newDriverNewPickups)
+//     newDriverNewPickups.addEventListener('click', event => {
+//         event.preventDefault()
+//         getPickUpInfo(currentDriver);
 
-    newDriverNewPickups.addEventListener('click', event => {
-        event.preventDefault()
-        getPickUpInfo(currentDriver);
+//     })
 
-    })
+//     body.appendChild(newDriverWelcomeDiv)
 
-    body.appendChild(newDriverWelcomeDiv)
-
-}
+// }
 
 
 
@@ -321,171 +194,15 @@ const Login = () => {
 }
     
 
-    const fetchDrivers = () =>{
+const fetchDrivers = () =>{
         fetch(DRIVERS_URL)
         .then(response => response.json())
         .then(drivers => {
             validateLogin(drivers);
         })
-    flightNumberOnlyForm.addEventListener('submit', function(e){
-        e.preventDefault()
-        // showCurrentFlights()
-        const passengerName = e.target.elements.paxName.value
-        const flightNumberOnly = e.target.elements.flightNumberOnly.value.toUpperCase()
-        const driver = currentDriver.id
-        // createPickup({passenger_name: passengerName, flight_number: flightNumberOnly, driver_id: driver})
-        // console.log(allLondonFlightsToday[0][0].flight.iataNumber)
-        const megaFlightsArray = allLondonFlightsToday.flat()
-        getInfoUsingFlightNumber(megaFlightsArray, flightNumberOnly, passengerName)
-
-    })
-
-    // const array = []
-    // const gArray = []
-    // const sArray = []
-    // const cArray = []
-    // const allLondonFlightsToday = []
-
-      function heathrowFlights(){
-            fetch(`http://aviation-edge.com/v2/public/timetable?key=${apiKey}&iataCode=LHR&type=arrival`)
-            .then(response => response.json())
-            .then(arr => arr.forEach(function(e){
-              array.push(e)
-            }))
-          }
-      function gatwickFlights(){
-          fetch(`http://aviation-edge.com/v2/public/timetable?key=${apiKey}&iataCode=LGW&type=arrival`)
-          .then(response => response.json())
-          .then(arr => arr.forEach(function(e){
-            gArray.push(e)
-          }))
-        }
-      function stanstedFlights(){
-          fetch(`http://aviation-edge.com/v2/public/timetable?key=${apiKey}&iataCode=STN&type=arrival`)
-          .then(response => response.json())
-          .then(arr => arr.forEach(function(e){
-            sArray.push(e)
-          }))
-        }
-      function cityFlights(){
-          fetch(`http://aviation-edge.com/v2/public/timetable?key=${apiKey}&iataCode=LCY&type=arrival`)
-          .then(response => response.json())
-          .then(arr => arr.forEach(function(e){
-            cArray.push(e)
-          }))
-        }
-
-      function makeMainFlights(){
-        heathrowFlights()
-        gatwickFlights()
-        stanstedFlights()
-        cityFlights()
-        allLondonFlightsToday.push(array, gArray, sArray, cArray)
-      }
-        makeMainFlights()
-
-
-    function getInfoUsingFlightNumber(flightArray, flightNumber, passengerName){
-      console.log(flightArray)
-      // console.log(flightNumber)
-      // console.log(passengerName)
-      for (let i=0; i<=flightArray.length; i++){
-        if (flightArray[i].flight.iataNumber === flightNumber){
-          console.log(flightArray[i])
-
-          const flightNumberMatched = flightArray[i].flight.iataNumber
-          const status = flightArray[i].status
-          const estimatedTime = flightArray[i].arrival.estimatedTime
-          const scheduledTime = flightArray[i].arrival.scheduledTime
-          const airport = flightArray[i].arrival.iataCode
-          const terminal = flightArray[i].arrival.terminal
-          let d = new Date(estimatedTime)
-          let l = new Date(scheduledTime)
-          const estimatedLandingTime = d.toLocaleTimeString('en-UK')
-          const scheduledLandingTime = l.toLocaleTimeString('en-UK')
-
-          makeLandingCard(flightNumber, status, scheduledLandingTime, airport, terminal, passengerName)
-          // "AA6690"
-        }
-      }
     }
 
-
-    function makeLandingCard(flightNumber, status, time, code, terminal, passenger_name){
-      // const div = document.getElementById("flight-list-div")
-      const li = document.createElement("li")
-      const flightNumberSpan = document.createElement("span")
-      const statusSpan = document.createElement("span")
-      const timeSpan = document.createElement("span")
-      const airportSpan = document.createElement("span")
-      const terminalSpan = document.createElement("span")
-      const passengerSpan = document.createElement("span")
-      const button = document.createElement("button")
-
-      flightNumberSpan.innerHTML = `Flight Number: ${flightNumber} `
-      statusSpan.innerHTML = `Status: ${status} `
-      timeSpan.innerHTML = `Landing Time: ${time} `
-      airportSpan.innerHTML = `Airport: ${code} `
-      terminalSpan.innerHTML = `Terminal: ${terminal} `
-      passengerSpan.innerHTML = `Passenger: ${passenger_name} `
-      button.innerHTML = "Delete Landing"
-
-
-      createLanding({flight_number: flightNumber, status: status, time: time, code: code, terminal: terminal, passenger_name: passenger_name, driver_id: currentDriver.id}, button, li)
-      // createPickup({passenger_name: passengerName, flight_number: flightNumber, driver_id: currentDriver.id, airport_id: airport})
-
-
-      div.append(li)
-      li.append(flightNumberSpan, statusSpan, timeSpan, airportSpan, terminalSpan, passengerSpan, button)
-      return div
-
-
-    }
-
-    function createLanding(landingData, button, li){
-      fetch(BUSINESS_PICKUPS_URL, {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(landingData)
-      })
-      .then(response => response.json())
-      .then(landing => {
-        button.addEventListener("click", function(e){
-          fetch(`${BUSINESS_PICKUPS_URL}/${landing.id}`, {
-            method: "DELETE"
-          })
-          .then(resp => resp.json())
-          .then(() => li.remove())
-          // render landing to page
-        })
-      })
-    }
-
-
-
-
-
-
-
-    const findFlight = (flightData, flightNumber) => {
-       console.log(flightData)
-       console.log(flightNumber)
-       const new_array = []
-       let status;
-       for(let i=0;i < flightData.length;i++)
-       {
-           if(flightData[i].flight.iataNumber === flightNumber)
-           {
-               status = flightData[i].status
-               new_array.push(flightData[i].arrival)
-           }
-       }
-       estimatedTime(new_array,status);
-    }
-
-    const validateLogin = (driverArray) =>{
+ const validateLogin = (driverArray) =>{
         let username = document.querySelector("#username_input").value
         let password = document.querySelector("#password_input").value
 
@@ -511,48 +228,59 @@ const Login = () => {
         }
     }
 
-    const greetDriver = currentDriver => {
+const greetDriver = currentDriver => {
+
+
         body.innerHTML = ""
         welcomeDiv = document.createElement('div')
         welcomeMessage = document.createElement('p')
-        welcomeMessage.innerText = `Welcome Back ${currentDriver.firstname}`
+        welcomeMessage.innerText = `Hello ${currentDriver.firstname}`
         welcomeDiv.appendChild(welcomeMessage)
 
 
-        currentPickups = document.createElement('p')
+        currentPickups = document.createElement('button')
         currentPickups.innerText = 'View your PickUps'
         welcomeDiv.appendChild(currentPickups)
         currentPickups.addEventListener('click', event => {
+            event.preventDefault()
             console.log('i was clicked')
             viewUserPickups(currentDriver)
         })
 
 
-        createNewPickup = document.createElement('p')
+        createNewPickup = document.createElement('button')
         createNewPickup.innerText = 'Create new Pickup'
         welcomeDiv.appendChild(createNewPickup)
         createNewPickup.addEventListener('click', event => {
             event.preventDefault()
+            debugger
             getPickUpInfo(currentDriver)
+        })
+
+        showMyFlightsList = document.createElement('button')
+        showMyFlightsList.innerText = 'Show My Flights List'
+        welcomeDiv.appendChild(showMyFlightsList)
+        showMyFlightsList.addEventListener('click', event => {
+            event.preventDefault()
+            console.log('i was clicked')
+            flightsList(currentDriver)
         })
 
 
 
-        body.appendChild(welcomeDiv)
+     body.appendChild(welcomeDiv)
     }
 
-    const viewUserPickups = currentDriver => {
+const viewUserPickups = currentDriver => {
 
         fetch(`${DRIVERS_URL}/${currentDriver.id}`)
         .then(response => response.json())
         .then(driverInfo => showPickups(driverInfo))
     }
 
-    const showPickups = driverInfo => {
+const showPickups = driverInfo => {
 
         body.innerHTML = ""
-
-        estimatedTimeDiv.appendChild(div)
 
         const showAllPickipDiv = document.createElement('div')
 
@@ -609,9 +337,11 @@ const Login = () => {
 
 
 
-    const getPickUpInfo = driverData => {
-  
-     
+    const getPickUpInfo = driverData => { 
+        
+    
+        currentDriver = driverData
+
         body.innerHTML = ""
      
         const newPickupDiv = document.createElement('div')
@@ -694,6 +424,8 @@ const Login = () => {
 
     const createPickup = (pickupData) => {
 
+        debugger
+
         console.log(pickupData)
         fetch(PICKUPS_URL, {
             method: 'POST',
@@ -743,7 +475,7 @@ const Login = () => {
             let extract_hour = new Date(flightData[i].arrival.scheduledTime)
              array_of_hours.push(extract_hour.getHours())
         }
-        console.log(evaluateHour(array_of_hours,our_flight_hour_for_compare))
+        evaluateHour(array_of_hours,our_flight_hour_for_compare)
 
         estimatedTime(new_array,status)
      }
@@ -777,7 +509,7 @@ const Login = () => {
 
     const addWaitingTime = percentageFlightsThisHour => {
 
-        const waitingTimeDiv = document.createElement('div')
+        let waitingTimeDiv = document.createElement('div')
         const waitingTime = document.createElement('p')
 
         waitingTimeDiv.innerHTML = " "
@@ -785,28 +517,34 @@ const Login = () => {
 
 
         if(percentageFlightsThisHour > 200){
+            waitingTimeDiv.innerHTML = ""
             waitingTime.innerText = 'Due to extremely high volume of flights arriving at this hour we would suggest leaving 1:30 hrs to clear security and arrivals'
+            waitingTimeDiv.appendChild(waitingTime)
         } else if (percentageFlightsThisHour > 150) {
+            waitingTimeDiv.innerHTML = ""
             waitingTime.innerText = 'Due to high volume of flights arriving at this hour we would suggest leaving 1 hour to clear security and arrivals'
+            waitingTimeDiv.appendChild(waitingTime)
         } else if (percentageFlightsThisHour > 100) {
+            waitingTimeDiv.innerHTML = ""
             waitingTime.innerText = 'Due to average volume of flights arriving at this hour we would suggest leaving 45 minutes to clear security and arrivals'
+            waitingTimeDiv.appendChild(waitingTime)
         } else {
+            waitingTimeDiv.innerHTML = ""
             waitingTime.innerText = 'Due to low volume of flights arriving at this hour we would suggest leaving 30 minutes to clear security and arrivals'
+            waitingTimeDiv.appendChild(waitingTime)
         }
 
-        waitingTimeDiv.appendChild(waitingTime)
 
         addedWaitTimeDiv.appendChild(waitingTimeDiv)
+
     }
 
 
     const estimatedTime = (new_array,status) => {
 
-        debugger
-
         console.log(status)
         body.innerHTML = ""
-        div = document.createElement("div")
+        estimatedTimeDiv = document.createElement("div")
         
         // const createNewPickUpDiv = document.createElement("div")
         // createNewPickUpDiv.innerText = 'create new pickup'
@@ -821,12 +559,6 @@ const Login = () => {
         //     console.log('i was clicked')
         //     viewUserPickups(currentDriver)
         // })
-    newDriverForm.addEventListener('submit', event => {
-        event.preventDefault()
-        const driverName = event.target.elements.name.value
-        createDriver({username: driverName})
-        console.log('submit')
-    })
 
         // createNewPickUpDiv.addEventListener('click', event => {
         //     event.preventDefault()
@@ -847,138 +579,341 @@ const Login = () => {
         
 
         if(status === "landed"){
-            div.innerText = `Your flight has landed at ${arrivalAirport} Terminal ${terminal} at: ${landing_time}`
+            estimatedTimeDiv.innerText = `Your flight has landed at ${arrivalAirport} Terminal ${terminal} at: ${landing_time}`
         }
         else if(status === "active"){
-            div.innerText = `Your flight is due to land at ${arrivalAirport} Terminal ${terminal} at: ${landing_time}`
+            estimatedTimeDiv.innerText = `Your flight is due to land at ${arrivalAirport} Terminal ${terminal} at: ${landing_time}`
         }
         else if(status === "diverted"){
-            div.innerText = `Unfortunately your flight has been diverted. Please check with ${airlineName} for more details`
+            estimatedTimeDiv.innerText = `Unfortunately your flight has been diverted. Please check with ${airlineName} for more details`
         }
         else if(status === "cancelled"){
-            div.innerText = `Unfortunately your flight has been cancelled. Please check with ${airlineName} for more details`
+            estimatedTimeDiv.innerText = `Unfortunately your flight has been cancelled. Please check with ${airlineName} for more details`
         }
         else{
-            div.innerText = `Your flight is due to land at ${arrivalAirport} Terminal ${terminal} at: ${scheduled_landing_time}`
+            estimatedTimeDiv.innerText = `Your flight is due to land at ${arrivalAirport} Terminal ${terminal} at: ${scheduled_landing_time}`
         }
+
+       
 
 
         const estimated_time_return_button = document.createElement('button')
         estimated_time_return_button.innerText = 'return to Pickup Profile'
-        div.appendChild(estimated_time_return_button)
+        estimatedTimeDiv.appendChild(estimated_time_return_button)
 
-        div.appendChild(addedWaitTimeDiv)
+       
+        estimatedTimeDiv.appendChild(addedWaitTimeDiv)
 
         estimated_time_return_button.addEventListener('click', event => {
+            
+            debugger
+
+            event.preventDefault()
             console.log('click')
             greetDriver(currentDriver)
-        fetch(DRIVERS_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(driverData)
-        })
 
+    })
 
-        body.appendChild(div)
+        // addedWaitTimeDiv.appendChild(estimatedTimeDiv)
+
+        body.appendChild(estimatedTimeDiv)
+        body.appendChild(addedWaitTimeDiv)
 
     }
 
 
 
+const flightCardDiv = document.querySelector('#flight-card-div')
 
-    // console.log('hello')
+
+// BUSINESS FEATURE
 
 
-    // const newDriverForm = document.querySelector('#new-driver-form')
-    // const newPickUpForm = document.querySelector('#new-pickup-form')
-    // const estimatedTimeDiv = document.querySelector('#estimated-arrival')
 
-    // newPickUpForm.addEventListener('submit', event => {
-    //     event.preventDefault()
+const flightsList = currentDriver => {
 
-    //     console.log('submit')
-
-    //     const passengerName = event.target.elements.name.value
-    //     const flightNumber = event.target.elements.flightNumber.value
-    //     const driver = currentDriver.id
-    //     const selectedAirport = document.querySelector('#airport-drop-down')
-    //     const airport = selectedAirport.selectedIndex + 1 ;
-
-    //     console.log(airport)
-
-    //    const airportCode = event.target.elements.airport.value
-
-    //    console.log(airportCode)
-
-    //     getFlightInfo(airportCode, flightNumber)
-
-    //     createPickup({passenger_name: passengerName, flight_number: flightNumber, driver_id: driver, airport_id: airport})
-    // })
-
-    // const getFlightInfo = (airportCode, flightNumber) => {
-
-    //     fetch(`http://aviation-edge.com/v2/public/timetable?key=${apiKey}&iataCode=${airportCode}&type=arrival`)
-    //         .then(response => response.json())
-    //         .then(data => findFlight(data, flightNumber))
-    // }
+    body.innerHTML = " "
+    flightCardDiv.innerHTML = " "
     
-    // const findFlight = (flightData, flightNumber) => {
-    //    console.log(flightData)
-    //    console.log(flightNumber)
-    //    const new_array = []
-    //    let status;
-    //    for(let i=0;i < flightData.length;i++)
-    //    {
-    //        if(flightData[i].flight.iataNumber === flightNumber)
-    //        {
-    //            status = flightData[i].status
-    //            new_array.push(flightData[i].arrival)
-    //        }
-    //    }
-    //    estimatedTime(new_array,status);
-    // }
 
-    // const estimatedTime = (new_array,status) =>{
-    //     console.log(status)
-    //     estimatedTimeDiv.innerHTML = ""
-    //     div = document.createElement("div")
-    //     let d = new Date(new_array[0].estimatedTime)
-    //     let l = new Date(new_array[0].scheduledTime)
-    //     const landing_time = d.toLocaleTimeString('en-UK')
-    //     const scheduled_landing_time = l.toLocaleTimeString('en-UK')
-    //     if(status === "landed"){
-    //         div.innerText = `Your flight has landed at: ${landing_time}`
-    //     }
-    //     else if(status === "active"){
-    //         div.innerText = `Your flight is due to land at: ${landing_time}`
-    //     }
-    //     else{
-    //         div.innerText = `Your flight is due to land at: ${scheduled_landing_time}`
-    //     }
-        
-    //     estimatedTimeDiv.appendChild(div)
+    const flightListDiv = document.createElement('div')
 
-    // }
+    console.log(currentDriver)
 
+    const flightListTitle = document.createElement('h3')
+    flightListTitle.innerHTML = 'Enter Your Passenger Name and Flight Details'
+    flightListDiv.appendChild(flightListTitle)
+
+    const flightNumberOnlyForm = document.createElement('form')
+    flightNumberOnlyForm.id = 'flight-number-form'
+    flightListDiv.appendChild(flightNumberOnlyForm)
+
+    flightNumberOnlyForm.innerHTML = 
+    `<input type="text" name="paxName" value="" placeholder="Passenger Name" class="input-text">
+    <br>
+    <input type="text" name="flightNumberOnly" value="" placeholder="Enter Flight Number" class="input-text">
+    <br>
+    <input type="submit" name="submit" value="Add To Flight Watcher" class="submit">`
+
+    const showFlightsDiv = document.createElement('div')
+    
+    const showMyFlightsButton = document.createElement("button")
+    showMyFlightsButton.innerHTML = "Show My Flights"
+    showFlightsDiv.appendChild(showMyFlightsButton)
+    flightListDiv.appendChild(showFlightsDiv)
+
+
+    showMyFlightsButton.addEventListener("click", function(e){
+    flightCardDiv.innerHTML = ""
+    showCurrentFlights()
+
+    showMyFlightsButton.innerHTML = 'Refresh Landing Times'
+    })
+
+    flightListDiv.appendChild(fullFlightListDiv)
 
 
 
+    flightNumberOnlyForm.addEventListener('submit', function(e){
+        e.preventDefault()
+        // showCurrentFlights()
+        console.log('submit')
+
+        debugger
+        const passengerName = e.target.elements.paxName.value
+        const flightNumberOnly = e.target.elements.flightNumberOnly.value.toUpperCase()
+        const driver = currentDriver.id
+        // createPickup({passenger_name: passengerName, flight_number: flightNumberOnly, driver_id: driver})
+        // console.log(allLondonFlightsToday[0][0].flight.iataNumber)
+        const megaFlightsArray = allLondonFlightsToday.flat()
+        getInfoUsingFlightNumber(megaFlightsArray, flightNumberOnly, passengerName)
+
+    })
 
 
-    // newDriverForm.addEventListener('submit', event => {
 
-    //     event.preventDefault()
+    const flight_list_return_button = document.createElement('button')
+        flight_list_return_button.innerText = 'return to Pickup Profile'
+        flightListDiv.appendChild(flight_list_return_button)
 
-    //     debugger
+        flight_list_return_button.addEventListener('click', event => {
+            console.log('click')
+            greetDriver(currentDriver)
+        })
 
-    //     const driverName = event.target.elements.name.value
+    body.appendChild(flightListDiv)
 
-    //     createDriver({username: driverName})
+    body.appendChild(flightCardDiv)
+}
 
-    //     console.log('submit')
-    // })
+
+
+
+
+const array = []
+const gArray = []
+const sArray = []
+const cArray = []
+const allLondonFlightsToday = []
+
+
+
+
+function showCurrentFlights(){
+  // this runs when you hit the show flights button as it needs the data to be fetched before it can work :)
+  // it is going to match the data in our API with the flights API to get accurate times and data on any button hit
+  // once we have the flight data we can render the data to the page
+  const megaFlightsArray = allLondonFlightsToday.flat()
+  const freshFlightData = []
+  // console.log(megaFlightsArray)
+  fetch(BUSINESS_PICKUPS_URL)
+    .then(resp => resp.json())
+    .then(savedLandings => {
+      const myLandings = savedLandings.filter(function(landing) {
+        return landing.driver_id === currentDriver.id })
+        // console.log(myLandings)
+          myLandings.forEach(function(landing){
+            // for (let i=0; i<=megaFlightsArray.length; i++){
+            megaFlightsArray.forEach(function(flight){
+              if (flight.flight.iataNumber === landing.flight_number){
+
+                  renderLanding(flight, landing)
+                }
+                // use flight number to get accurate landing data for my flights
+                // renderLanding(landing)
+            })
+          })
+        })
+
+      }
+
+
+
+function renderLanding(flight, landing){
+
+  let e = new Date(flight.arrival.estimatedTime)
+  let s = new Date(flight.arrival.scheduledTime)
+  const estimatedLandingTime = e.toLocaleTimeString('en-UK')
+  const scheduledLandingTime = s.toLocaleTimeString('en-UK')
+
+
+  const li = document.createElement("li")
+  li.className = "li"
+  const flightNumberSpan = document.createElement("span")
+  const statusSpan = document.createElement("span")
+  const timeSpan = document.createElement("span")
+  const airportSpan = document.createElement("span")
+  const terminalSpan = document.createElement("span")
+  const passengerSpan = document.createElement("span")
+  const button = document.createElement("button")
+
+  if(flight.status === "landed"){
+      timeSpan.innerHTML = `Landed at: ${estimatedLandingTime} `
+  }
+  else if(flight.status === "active"){
+      timeSpan.innerHTML = `Estimated Landing Time: ${estimatedLandingTime} `
+  }
+  else{
+      timeSpan.innerHTML = `Scheduled Landing Time ${scheduledLandingTime} `
+  }
+  statusSpan.innerHTML = `Status: ${flight.status} `
+  airportSpan.innerHTML = `Airport: ${landing.airport.name}  `
+  // ${flight.arrival.iataCode}
+  terminalSpan.innerHTML = `Terminal: ${flight.arrival.terminal} `
+  passengerSpan.innerHTML = `Passenger: ${landing.passenger_name} `
+  flightNumberSpan.innerHTML = `Flight Number: ${flight.flight.iataNumber} `
+  button.innerHTML = "Delete Landing"
+
+  flightCardDiv.append(li)
+  li.append(flightNumberSpan, statusSpan, timeSpan, airportSpan, terminalSpan, passengerSpan, button)
+  button.addEventListener("click", function(e){
+    fetch(`${BUSINESS_PICKUPS_URL}/${landing.id}`, {
+      method: "DELETE"
+    })
+    .then(resp => resp.json())
+    .then(() => li.remove())
+  })
+  return flightCardDiv
+
+}
+
+      function heathrowFlights(){
+            fetch(`http://aviation-edge.com/v2/public/timetable?key=${apiKey}&iataCode=LHR&type=arrival`)
+            .then(response => response.json())
+            .then(arr => arr.forEach(function(e){
+              array.push(e)
+            }))
+          }
+      function gatwickFlights(){
+          fetch(`http://aviation-edge.com/v2/public/timetable?key=${apiKey}&iataCode=LGW&type=arrival`)
+          .then(response => response.json())
+          .then(arr => arr.forEach(function(e){
+            gArray.push(e)
+          }))
+        }
+      function stanstedFlights(){
+          fetch(`http://aviation-edge.com/v2/public/timetable?key=${apiKey}&iataCode=STN&type=arrival`)
+          .then(response => response.json())
+          .then(arr => arr.forEach(function(e){
+            sArray.push(e)
+          }))
+        }
+      function cityFlights(){
+          fetch(`http://aviation-edge.com/v2/public/timetable?key=${apiKey}&iataCode=LCY&type=arrival`)
+          .then(response => response.json())
+          .then(arr => arr.forEach(function(e){
+            cArray.push(e)
+          }))
+        }
+
+      function makeMainFlights(){
+        heathrowFlights()
+        gatwickFlights()
+        stanstedFlights()
+        cityFlights()
+        allLondonFlightsToday.push(array, gArray, sArray, cArray)
+      }
+        makeMainFlights()
+
+
+    function getInfoUsingFlightNumber(flightArray, flightNumber, passengerName){
+      console.log(flightArray)
+
+      for (let i=0; i < flightArray.length; i++){
+        if (flightArray[i].flight.iataNumber === flightNumber){
+          console.log(flightArray[i])
+
+          const flightNumberMatched = flightArray[i].flight.iataNumber
+          const status = flightArray[i].status
+          const estimatedTime = flightArray[i].arrival.estimatedTime
+          const scheduledTime = flightArray[i].arrival.scheduledTime
+          const airport = flightArray[i].arrival.iataCode
+          const terminal = flightArray[i].arrival.terminal
+          let d = new Date(estimatedTime)
+          let l = new Date(scheduledTime)
+          const estimatedLandingTime = d.toLocaleTimeString('en-UK')
+          const scheduledLandingTime = l.toLocaleTimeString('en-UK')
+
+          makeLandingCard(flightNumber, status, scheduledLandingTime, airport, terminal, passengerName)
+        }
+      }
+    }
+
+
+    function makeLandingCard(flightNumber, status, time, code, terminal, passenger_name){
+      const li = document.createElement("li")
+      const flightNumberSpan = document.createElement("span")
+      const statusSpan = document.createElement("span")
+      const timeSpan = document.createElement("span")
+      const airportSpan = document.createElement("span")
+      const terminalSpan = document.createElement("span")
+      const passengerSpan = document.createElement("span")
+      const button = document.createElement("button")
+
+      flightNumberSpan.innerHTML = `Flight Number: ${flightNumber} `
+      statusSpan.innerHTML = `Status: ${status} `
+      timeSpan.innerHTML = `Landing Time: ${time} `
+      airportSpan.innerHTML = `Airport: ${code} `
+      terminalSpan.innerHTML = `Terminal: ${terminal} `
+      passengerSpan.innerHTML = `Passenger: ${passenger_name} `
+      button.innerHTML = "Delete Landing"
+
+
+      createLanding({flight_number: flightNumber, status: status, time: time, code: code, terminal: terminal, passenger_name: passenger_name, driver_id: currentDriver.id}, button, li)
+     
+
+    
+    
+
+      flightCardDiv.append(li)
+      li.append(flightNumberSpan, statusSpan, timeSpan, airportSpan, terminalSpan, passengerSpan, button)
+      return flightCardDiv
+
+
+    }
+
+    function createLanding(landingData, button, li){
+
+        debugger
+
+      fetch(BUSINESS_PICKUPS_URL, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(landingData)
+      })
+      .then(response => response.json())
+      .then(landing => {
+        button.addEventListener("click", function(e){
+          fetch(`${BUSINESS_PICKUPS_URL}/${landing.id}`, {
+            method: "DELETE"
+          })
+          .then(resp => resp.json())
+          .then(() => li.remove())
+          // render landing to page
+        })
+      })
+    }
 
    
-});
