@@ -11,3 +11,5 @@ airports = Airport.create([{name: 'Heathrow Airport', code: 'LHR', status:'open'
 
 currentDriver = Driver.create({firstname: "jack", lastname: "nicholson", username: "new", password:"password"})
 currentDriver2 = Driver.create({firstname: "pedro", lastname: "nicholson", username: "new1", password:"password"})
+
+BusinessPickup.create({flight_number: "LY8010", status: "Landed", time: "10:10:00 PM", airport_id: 1, terminal: "5", passenger_name: "Rob Stark", driver_id: 1})

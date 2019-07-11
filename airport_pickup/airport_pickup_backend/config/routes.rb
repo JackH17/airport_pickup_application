@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :business_pickups
   resources :pickups
   resources :drivers
   resources :airports

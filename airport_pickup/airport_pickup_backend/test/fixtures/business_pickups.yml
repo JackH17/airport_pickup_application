@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  passenger_name: MyString
+  flight_number: MyString
+  status: MyString
+  time: MyString
+  airport: one
+  driver: one
+  terminal: 1
+  passenger_name: MyString
+
+two:
+  passenger_name: MyString
+  flight_number: MyString
+  status: MyString
+  time: MyString
+  airport: two
+  driver: two
+  terminal: 1
+  passenger_name: MyString
