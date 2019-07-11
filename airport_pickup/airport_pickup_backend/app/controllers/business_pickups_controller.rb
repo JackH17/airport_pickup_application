@@ -7,7 +7,7 @@ class BusinessPickupsController < ApplicationController
       # byebug
      # @my_Pickups = BusinessPickup.find_by(driver_id: params[:driver_id])
      @pickups = BusinessPickup.all
-     render json: @pickups, except:[:created_at, :updated_at]
+     render json: @pickups, except:[:created_at, :updated_at], include: [:airport]
      # render json: @my_pickups,
   end
 
