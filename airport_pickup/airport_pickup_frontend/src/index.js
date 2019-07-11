@@ -339,36 +339,39 @@ const greetDriver = currentDriver => {
 
         currentPickups.addEventListener('click', event => {
             event.preventDefault()
-            console.log('i was clicked')
-        })
-
-        li_navbar_view.addEventListener('click', event => {
+            console.log(currentDriver)
             viewUserPickups(currentDriver)
-        })
- 
-
-        // createNewPickup = document.createElement('button')
-        // createNewPickup.innerText = 'Create new Pickup'
-        // welcomeDiv.appendChild(createNewPickup)
-        // createNewPickup.addEventListener('click', event => {
-        // createNewPickup = document.createElement('p')
-        // createNewPickup.innerText = 'Create new Pickup'
-        // welcomeDiv.appendChild(createNewPickup)
-        li_navbar_create.addEventListener('click', event => {
-            event.preventDefault()
-            debugger
-            getPickUpInfo(currentDriver)
         })
 
         showMyFlightsList = document.createElement('button')
         showMyFlightsList.innerText = 'Show My Flights List'
         welcomeDiv.appendChild(showMyFlightsList)
+
         showMyFlightsList.addEventListener('click', event => {
-            event.preventDefault()
-            console.log('i was clicked')
-            flightsList(currentDriver)
+                event.preventDefault()
+                console.log('i was clicked')
+                flightsList(currentDriver)
         })
 
+        createNewPickup = document.createElement('button')
+        createNewPickup.innerText = 'Create new Pickup'
+        welcomeDiv.appendChild(createNewPickup)
+        
+        createNewPickup.addEventListener('click', event => {
+            event.preventDefault()
+            console.log(currentDriver)
+            getPickUpInfo(currentDriver)
+        })
+
+        li_navbar_view.addEventListener('click', event => {
+            viewUserPickups(currentDriver)
+        })
+  
+        li_navbar_create.addEventListener('click', event => {
+            event.preventDefault()
+            debugger
+            getPickUpInfo(currentDriver)
+        })
 
         li_navbar_logout.addEventListener("click", event =>{
             event.preventDefault()
@@ -392,25 +395,26 @@ const showPickups = driverInfo => {
         const showAllPickipDiv = document.createElement('div')
 
         const pickupList = document.createElement('div')
-
+        individualPickupDiv = document.createElement('ul')
+        let i = 0;
         driverInfo.pickups.forEach(pickup => {
-            individualPickupDiv = document.createElement('div')
-
-            liItem = document.createElement('p')
+            liItem = document.createElement('li')
+            liItem.id = ++i
             liItem.innerText = pickup.passenger_name 
             individualPickupDiv.appendChild(liItem)
 
-            let pickupResolved = document.createElement('button')
-            pickupResolved.innerText = 'pickUp made'
+            // let pickupResolved = document.createElement('button')
+            // pickupResolved.innerText = 'pickUp made'
 
-            individualPickupDiv.appendChild(pickupResolved)
+            // individualPickupDiv.appendChild(pickupResolved)
 
             pickupList.appendChild(individualPickupDiv)
 
-            pickupResolved.addEventListener('click', event => {
-                console.log('click')
-                resolveThisPickup(pickup, individualPickupDiv)
-            }) 
+            // pickupResolved.addEventListener('click', event => {
+            //     console.log('click')
+            //     event.preventDefault()
+            //     resolveThisPickup(pickup, liItem)
+            // }) 
         })
 
         const return_button = document.createElement('button')
@@ -422,25 +426,26 @@ const showPickups = driverInfo => {
             greetDriver(currentDriver)
         })
 
-
-
         showAllPickipDiv.appendChild(pickupList)
 
         body.appendChild(showAllPickipDiv)
         console.log(driverInfo)
     }
 
-    const resolveThisPickup = (pickupInfo, individualPickupDiv) => {
+    // const resolveThisPickup = (pickupInfo, liItem) => {
 
-        console.log(pickupInfo)
+    //     console.log(pickupInfo)
+    //     debugger
 
-        individualPickupDiv.remove()
+    //     liItem.remove()
 
-        fetch(`${PICKUPS_URL}/${pickupInfo.id}`, {
-            method: 'DELETE'
-        })
-        .then(console.log('pickUp resolved'))
-    }
+
+
+    //     fetch(`${PICKUPS_URL}/${pickupInfo.id}`, {
+    //         method: 'DELETE'
+    //     })
+    //     .then(console.log('pickUp resolved'))
+    // }
 
 
 
