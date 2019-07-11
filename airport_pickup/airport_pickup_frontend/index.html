@@ -30,7 +30,7 @@
                     <option value="LGW">Gatwick</option>
                     <option value="STN">Stansted</option>
                     <option value="LCY">London City</option>
-                    
+
                 </select>
                 <br>
                 <input type="submit" name="submit" value="Create My PickUp" class="submit">
@@ -38,7 +38,28 @@
 
             <div id="estimated-arrival"></div>
         </div>
-    
+
+            <div>
+                <form id = "flight-number-form">
+                    <h3>Enter Your Passenger and Flight Details</h3>
+                    <input type="text" name="paxName" value="" placeholder="Passenger Name" class="input-text">
+                    <br>
+                    <input type="text" name="flightNumberOnly" value="" placeholder="Enter Flight Number" class="input-text">
+                    <br>
+                    <input type="submit" name="submit" value="Add To Flight Watcher" class="submit">
+                </form>
+            </div>
+            <br>
+            <br>
+            <div id="showFlightsDiv">
+            </div>
+            <br>
+
+            <div id="flight-list-div">DIV
+              <ul id="ul">UL
+              </ul>
+            </div>
+
 
 <script src="src/index.js"></script>
 </body>
