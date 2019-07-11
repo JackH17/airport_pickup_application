@@ -36,11 +36,11 @@ ActiveRecord::Schema.define(version: 2019_07_10_084631) do
 
   create_table "drivers", force: :cascade do |t|
     t.string "username"
-    t.string "password"
-    t.string "lastname"
-    t.string "firstname"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "password"
+    t.string "firstname"
+    t.string "lastname"
   end
 
   create_table "pickups", force: :cascade do |t|

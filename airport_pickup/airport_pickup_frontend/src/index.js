@@ -23,29 +23,36 @@ const mainPage = () =>{
     body.innerHTML = ""
 
     const div = document.createElement("div")
+    const title_div = document.createElement("div")
     const h3 = document.createElement("h3")
     const login_button = document.createElement("button")
     const signup_option = document.createElement("button")
     const login_button_div = document.createElement("div")
-    login_button_div.id = "login-button-div"
     const sign_up_button_div = document.createElement("div")
+
+    title_div.id = "title"
+
+    login_button_div.id = "login-button-div"
+    
     login_button_div.setAttribute('align', 'center')
     sign_up_button_div.setAttribute('align', 'center')
     
     h3.style.textAlign = "center"
-    h3.innerText = "What would you like to do?"
-    h3.style.color = "white"
+    h3.innerText = "PickApp"
+    h3.id = "question"
 
     login_button.id = "login"
-    login_button.className = "waves-effect waves-light btn"
+    login_button.className = "waves-effect waves-light btn teal lighten-1"
     login_button.innerText = "Login"
 
     signup_option.innerText = "Signup"
     signup_option.id = "signup"
+    signup_option.className = "waves-effect waves-light btn lighten-1"
 
-    signup_option.className = "waves-effect waves-light btn"
 
-    div.appendChild(h3)
+    div.appendChild(title_div)
+    title_div.appendChild(h3)
+    
     div.appendChild(login_button_div)
     div.appendChild(sign_up_button_div)
 
@@ -53,7 +60,6 @@ const mainPage = () =>{
     sign_up_button_div.appendChild(signup_option)
     
     body.appendChild(div)
-
     login_button.addEventListener("click", function() {
         Login();
     })
@@ -223,18 +229,35 @@ const greetNewDriver = (driver) => {
 const Login = () => {
     body.innerHTML = ""
     const div = document.createElement("div")
+    const another_div = document.createElement("div")
+    const another_div2 = document.createElement("div")
     const sub_div1 = document.createElement("div")
     const sub_div2 = document.createElement("div")
     const username_input = document.createElement("input")
     const password = document.createElement("input")
     const submit_login_button = document.createElement("button")
     const form = document.createElement("form")
+    const icon1 = document.createElement("i")
+    const icon2 = document.createElement("i")
+    form.id = "login_form"
+    form.autocomplete = "off"
+    another_div.className = "row"
+    another_div2.className = "row"
+    submit_login_button.id = "login_button"
+    submit_login_button.className = "waves-effect waves-light btn teal lighten-1"
     submit_login_button.innerText = "Login"
     
-    sub_div1.innerText = "Username: "
-    sub_div2.innerText = "Password "
+    sub_div1.className = "input-field col offset-s4 s4"
+    sub_div2.className = "input-field col offset-s4 s4"
+    icon1.className = "material-icons prefix"
+    icon1.innerText = "account_circle"
+    icon2.className = "material-icons prefix"
+    icon2.innerText = "lock"
+    sub_div1.appendChild(icon1)
+    sub_div2.appendChild(icon2)
+
     
-    username_input.placeholder = "Enter your username"
+    username_input.placeholder = "Username"
     username_input.id = "username_input"
     username_input.type = "text"
     
@@ -247,8 +270,10 @@ const Login = () => {
     
     body.appendChild(div)
     div.appendChild(form)
-    form.appendChild(sub_div1)
-    form.appendChild(sub_div2)
+    form.appendChild(another_div)
+    form.appendChild(another_div2)
+    another_div.appendChild(sub_div1)
+    another_div2.appendChild(sub_div2)
     form.appendChild(submit_login_button)
     
     submit_login_button.addEventListener("click", function(e){
@@ -306,7 +331,7 @@ const greetDriver = currentDriver => {
         let a_view = document.createElement("a")
         let a_create = document.createElement("a")
         let a_logout = document.createElement("a")
-        navbar_div.className = "nav-wrapper"
+        navbar_div.className = "nav-wrapper teal lighten-1"
         ul_navbar_left.className = "left hide-on-med-and-down"
         ul_navbar_right.className = "right hide-on-med-and-down"
         a_view.innerText = 'View your PickUps'
@@ -465,10 +490,15 @@ const showPickups = driverInfo => {
         flightNumber.placeholder = 'Flight Number'
         flightNumber.name = 'flightNumber'
         newPickUpForm.appendChild(flightNumber)
-     
+
+
+        const arrivalAirport_div = document.createElement('div')
         const arrivalAirport = document.createElement('select')
+        arrivalAirport_div.className = "input-field col s12"
+        arrivalAirport_div.appendChild(arrivalAirport)
         arrivalAirport.id = 'airport-drop-down'
         arrivalAirport.name = 'airport'
+        arrivalAirport.style.display = "block"
      
         const heathrow = document.createElement('option')
         heathrow.innerText = 'Heathrow'
@@ -493,12 +523,13 @@ const showPickups = driverInfo => {
         const pickupSubmit = document.createElement('input')
         pickupSubmit.type = 'submit'
         arrivalAirport.appendChild(pickupSubmit)
+        
+        
         button = document.createElement("button")
-     
-        newPickUpForm.appendChild(arrivalAirport)
      
      
         newPickupDiv.appendChild(newPickUpForm)
+        newPickUpForm.appendChild(arrivalAirport)
         body.appendChild(newPickupDiv)
      
      
@@ -617,8 +648,6 @@ const showPickups = driverInfo => {
         const waitingTime = document.createElement('p')
 
         waitingTimeDiv.innerHTML = " "
-
-
 
         if(percentageFlightsThisHour > 200){
             waitingTimeDiv.innerHTML = ""
