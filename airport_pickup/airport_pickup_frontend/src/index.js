@@ -1,6 +1,7 @@
 const body = document.body
 let currentDriver;
 let navbar = document.querySelector(".nav-wrapper")
+let background_img = document.querySelector("#bg")
 
 const DRIVERS_URL = 'http://localhost:3000/drivers'
 const AIRPORTS_URL = 'http://localhost:3000/airports'
@@ -18,18 +19,32 @@ const mainPage = () =>{
     const h3 = document.createElement("h3")
     const login_button = document.createElement("button")
     const signup_option = document.createElement("button")
-    div.id = "welcome"
+    const login_button_div = document.createElement("div")
+    login_button_div.id = "login-button-div"
+    const sign_up_button_div = document.createElement("div")
+    login_button_div.setAttribute('align', 'center')
+    sign_up_button_div.setAttribute('align', 'center')
+    
     h3.style.textAlign = "center"
     h3.innerText = "What would you like to do?"
+    h3.style.color = "white"
+
     login_button.id = "login"
-    login_button.style.textAlign = "center"
+    login_button.className = "waves-effect waves-light btn"
     login_button.innerText = "Login"
+
     signup_option.innerText = "Signup"
     signup_option.id = "signup"
-    body.appendChild(div)
+    signup_option.className = "waves-effect waves-light btn"
+
     div.appendChild(h3)
-    div.appendChild(login_button)
-    div.appendChild(signup_option) 
+    div.appendChild(login_button_div)
+    div.appendChild(sign_up_button_div)
+
+    login_button_div.appendChild(login_button)
+    sign_up_button_div.appendChild(signup_option)
+    
+    body.appendChild(div)
     login_button.addEventListener("click", function(){
         Login();
     })
@@ -346,12 +361,6 @@ const Login = () => {
                 resolveThisPickup(pickup, liItem)
             }) 
         })
-<<<<<<< HEAD
-        body.appendChild(pickupList)
-        
-        debugger
-=======
->>>>>>> 239b02890ef9969bdfbc29565274ab1bf5a844dd
 
         const return_button = document.createElement('button')
         return_button.innerText = 'return to Pickup Profile'
@@ -461,10 +470,6 @@ const Login = () => {
 
 
     const createPickup = (pickupData) => {
-<<<<<<< HEAD
-=======
-
->>>>>>> 239b02890ef9969bdfbc29565274ab1bf5a844dd
         console.log(pickupData)
         fetch(PICKUPS_URL, {
             method: 'POST', 
