@@ -1,5 +1,6 @@
 const body = document.body
 let currentDriver;
+let navbar = document.querySelector(".nav-wrapper")
 
 const DRIVERS_URL = 'http://localhost:3000/drivers'
 const AIRPORTS_URL = 'http://localhost:3000/airports'
@@ -7,21 +8,21 @@ const PICKUPS_URL = 'http://localhost:3000/pickups'
 
 const apiKey = 'e5afcd-79f8bd'
 
-
-
-
 document.addEventListener('DOMContentLoaded', (event) => {
     mainPage();
 })
 
 const mainPage = () =>{
+    body.innerHTML = ""
     const div = document.createElement("div")
     const h3 = document.createElement("h3")
     const login_button = document.createElement("button")
     const signup_option = document.createElement("button")
     div.id = "welcome"
+    h3.style.textAlign = "center"
     h3.innerText = "What would you like to do?"
     login_button.id = "login"
+    login_button.style.textAlign = "center"
     login_button.innerText = "Login"
     signup_option.innerText = "Signup"
     signup_option.id = "signup"
@@ -39,7 +40,6 @@ const mainPage = () =>{
 }
 
 signup = () => {
-
     body.innerHTML = ""
     const div = document.createElement("div")
     const sub_div1 = document.createElement("div")
@@ -105,6 +105,12 @@ signup = () => {
 
 }
 
+
+const Logout = (driver) => {
+    driver = ""
+    mainPage()
+}
+
 const createNewDriver = newDriverData => {
     return fetch(DRIVERS_URL, {
         method: 'POST', 
@@ -117,30 +123,58 @@ const createNewDriver = newDriverData => {
     .then(data => greetNewDriver(data))
 }
 
+const createNavbar = (currentDriver) =>{
+    let nav = document.createElement("nav")
+    let navbar_div = document.createElement("div")
+    let ul_navbar_left = document.createElement("ul")
+    let ul_navbar_right = document.createElement("ul")
+    let li_navbar_view = document.createElement("li")
+    let li_navbar_create = document.createElement("li")
+    let li_navbar_logout = document.createElement("li")
+    let a_view = document.createElement("a")
+    let a_create = document.createElement("a")
+    let a_logout = document.createElement("a")
+    navbar_div.className = "nav-wrapper"
+    ul_navbar_left.className = "left hide-on-med-and-down"
+    ul_navbar_right.className = "right hide-on-med-and-down"
+    a_view.innerText = 'View your Pickups'
+    a_create.innerText = "Create a new Pickup"
+    a_logout.innerText = "Logout"
+    a_logout.style.alignContent = "right"
+    nav.appendChild(navbar_div)
+    navbar_div.appendChild(ul_navbar_left)
+    navbar_div.appendChild(ul_navbar_right)
+    ul_navbar_left.appendChild(li_navbar_view)
+    ul_navbar_left.appendChild(li_navbar_create)
+    ul_navbar_right.appendChild(li_navbar_logout)
+    li_navbar_view.appendChild(a_view)
+    li_navbar_create.appendChild(a_create)
+    li_navbar_logout.appendChild(a_logout)        
+    body.appendChild(nav)
+
+    li_navbar_view.addEventListener('click', event => {
+        event.preventDefault()
+        viewUserPickups(currentDriver)
+    })
+
+    li_navbar_create.addEventListener('click', event => {
+        event.preventDefault()
+        getPickUpInfo(currentDriver);
+    })
+
+    li_navbar_logout.addEventListener("click", event =>{
+        event.preventDefault()
+        Logout(currentDriver)
+    })
+
+}
+
 
 
 const greetNewDriver = (driver) => {
-
     body.innerHTML = ""
     let currentDriver = driver;
-    debugger
-    newDriverWelcomeDiv = document.createElement('div')
-
-    newDriverWelcomeMessage = document.createElement('p')
-    newDriverWelcomeMessage.innerText = `Welcome ${currentDriver.firstname}`
-    newDriverWelcomeDiv.appendChild(newDriverWelcomeMessage)
-
-    newDriverNewPickups = document.createElement('p')
-    newDriverNewPickups.innerText = `Make your first Pickup`
-    newDriverWelcomeDiv.appendChild(newDriverNewPickups)
-
-    newDriverNewPickups.addEventListener('click', event => {
-        event.preventDefault()
-        getPickUpInfo(currentDriver);
-
-    })
-
-    body.appendChild(newDriverWelcomeDiv)
+    createNavbar(currentDriver);
 
 }
 
@@ -183,9 +217,9 @@ const Login = () => {
         fetchDrivers()
     })
 }
-    
 
     const fetchDrivers = () =>{
+        
         fetch(DRIVERS_URL)
         .then(response => response.json())
         .then(drivers => {
@@ -221,31 +255,64 @@ const Login = () => {
 
     const greetDriver = currentDriver => {
         body.innerHTML = ""
+        let nav = document.createElement("nav")
+        let navbar_div = document.createElement("div")
+        let ul_navbar_left = document.createElement("ul")
+        let ul_navbar_right = document.createElement("ul")
+        let li_navbar_view = document.createElement("li")
+        let li_navbar_create = document.createElement("li")
+        let li_navbar_logout = document.createElement("li")
+        let a_view = document.createElement("a")
+        let a_create = document.createElement("a")
+        let a_logout = document.createElement("a")
+        navbar_div.className = "nav-wrapper"
+        ul_navbar_left.className = "left hide-on-med-and-down"
+        ul_navbar_right.className = "right hide-on-med-and-down"
+        a_view.innerText = 'View your PickUps'
+        a_create.innerText = "Create a new Pickup"
+        a_logout.innerText = "Logout"
+        a_logout.style.alignContent = "right"
+        nav.appendChild(navbar_div)
+        navbar_div.appendChild(ul_navbar_left)
+        navbar_div.appendChild(ul_navbar_right)
+        ul_navbar_left.appendChild(li_navbar_view)
+        ul_navbar_left.appendChild(li_navbar_create)
+        ul_navbar_right.appendChild(li_navbar_logout)
+        li_navbar_view.appendChild(a_view)
+        li_navbar_create.appendChild(a_create)
+        li_navbar_logout.appendChild(a_logout)
+
+        
+        body.appendChild(nav)
+        
         welcomeDiv = document.createElement('div')
         welcomeMessage = document.createElement('p')
+        welcomeMessage.style.textAlign = "center"
         welcomeMessage.innerText = `Welcome Back ${currentDriver.firstname}`
         welcomeDiv.appendChild(welcomeMessage)
 
-
-        currentPickups = document.createElement('p')
-        currentPickups.innerText = 'View your PickUps'
-        welcomeDiv.appendChild(currentPickups)
-        currentPickups.addEventListener('click', event => {
-            console.log('i was clicked')
+        
+        // currentPickups = document.createElement('p')
+        // currentPickups.innerText = 'View your PickUps'
+        // welcomeDiv.appendChild(currentPickups)
+        li_navbar_view.addEventListener('click', event => {
             viewUserPickups(currentDriver)
         })
 
+        
 
-        createNewPickup = document.createElement('p')
-        createNewPickup.innerText = 'Create new Pickup'
-        welcomeDiv.appendChild(createNewPickup)
-        createNewPickup.addEventListener('click', event => {
+        // createNewPickup = document.createElement('p')
+        // createNewPickup.innerText = 'Create new Pickup'
+        // welcomeDiv.appendChild(createNewPickup)
+        li_navbar_create.addEventListener('click', event => {
             event.preventDefault()
             getPickUpInfo(currentDriver)
-            debugger
         })
 
-
+        li_navbar_logout.addEventListener("click", event =>{
+            event.preventDefault()
+            Logout(currentDriver)
+        })
 
         body.appendChild(welcomeDiv)
     }
@@ -268,9 +335,7 @@ const Login = () => {
             liItem.innerText = pickup.passenger_name 
             pickupList.appendChild(liItem)
         })
-        div_button.appendChild(return_button)
         body.appendChild(pickupList)
-        body.appendChild(return_button)
         
         debugger
 
@@ -362,7 +427,6 @@ const Login = () => {
 
 
     const createPickup = (pickupData) => {
-        debugger
         console.log(pickupData)
         fetch(PICKUPS_URL, {
             method: 'POST', 
