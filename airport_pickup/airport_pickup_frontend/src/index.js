@@ -7,6 +7,8 @@ const PICKUPS_URL = 'http://localhost:3000/pickups'
 
 const apiKey = 'e5afcd-79f8bd'
 
+const addedWaitTimeDiv = document.createElement('div')
+
 
 
 
@@ -123,7 +125,7 @@ const greetNewDriver = (driver) => {
 
     body.innerHTML = ""
     let currentDriver = driver;
-    debugger
+ 
     newDriverWelcomeDiv = document.createElement('div')
 
     newDriverWelcomeMessage = document.createElement('p')
@@ -262,20 +264,25 @@ const Login = () => {
 
         const showAllPickipDiv = document.createElement('div')
 
-        const pickupList = document.createElement('ul')
+        const pickupList = document.createElement('div')
 
         driverInfo.pickups.forEach(pickup => {
-            liItem = document.createElement('li')
+            individualPickupDiv = document.createElement('div')
+
+            liItem = document.createElement('p')
             liItem.innerText = pickup.passenger_name 
-            pickupList.appendChild(liItem)
+            individualPickupDiv.appendChild(liItem)
 
             let pickupResolved = document.createElement('button')
             pickupResolved.innerText = 'pickUp made'
-            pickupList.appendChild(pickupResolved)
+
+            individualPickupDiv.appendChild(pickupResolved)
+
+            pickupList.appendChild(individualPickupDiv)
 
             pickupResolved.addEventListener('click', event => {
                 console.log('click')
-                resolveThisPickup(pickup, liItem)
+                resolveThisPickup(pickup, individualPickupDiv)
             }) 
         })
 
@@ -296,9 +303,16 @@ const Login = () => {
         console.log(driverInfo)
     }
 
-    const resolveThisPickup = (pickupInfo, liItem) => {
+    const resolveThisPickup = (pickupInfo, individualPickupDiv) => {
 
-        console.log(liItem)
+        console.log(pickupInfo)
+
+        individualPickupDiv.remove()
+
+        fetch(`${PICKUPS_URL}/${pickupInfo.id}`, {
+            method: 'DELETE'
+        })
+        .then(console.log('pickUp resolved'))
     }
 
 
@@ -410,22 +424,72 @@ const Login = () => {
     const findFlight = (flightData, flightNumber) => {
 
         console.log(flightData)
+
            console.log(flightNumber)
            const new_array = []
            let status;
+           let airline;
+
            for(let i=0;i < flightData.length;i++)
            {
                if(flightData[i].flight.iataNumber === flightNumber)
                {
                    status = flightData[i].status
                    new_array.push(flightData[i].arrival)
+                   new_array.push(flightData[i].airline)
                }
            }
-           estimatedTime(new_array,status);
+        //    estimatedTime(new_array,status);
 
+        let array_of_hours = []
+        let our_hour = new_array[0].scheduledTime
+        let our_flight_hour = new Date(our_hour)
+        let our_flight_hour_for_compare = our_flight_hour.getHours()
+        
+        console.log(our_flight_hour_for_compare)
+ 
+        for(let i=0;i<flightData.length;i++){
+            let extract_hour = new Date(flightData[i].arrival.scheduledTime)
+             array_of_hours.push(extract_hour.getHours())
+        }
+        console.log(evaluateHour(array_of_hours,our_flight_hour_for_compare))
+
+        estimatedTime(new_array,status)
+     }
+ 
+     const evaluateHour = (array_of_hours,our_flight_hour_for_compare) => {
+         let counter = 0;
+         for(let i=0;i<array_of_hours.length;i++)
+         {
+             if(array_of_hours[i] === our_flight_hour_for_compare)
+             {
+                 counter++
+             }
+         }
+         
+         addWaitingTime(counter)
+     }
+
+
+    const addWaitingTime = counter => {
+
+        const waitingTimeDiv = document.createElement('div')
+        const waitingTime = document.createElement('p')
+
+
+
+        if(counter > 100){
+            waitingTime.innerText = 'Due to high volume of flights we would suggest leaving 1 hour to clear security and arrivals'
+        } 
+        waitingTimeDiv.appendChild(waitingTime)
+
+        addedWaitTimeDiv.appendChild(waitingTimeDiv)
     }
 
+
     const estimatedTime = (new_array,status) => {
+
+        debugger
 
         console.log(status)
         body.innerHTML = ""
@@ -451,27 +515,45 @@ const Login = () => {
         //     getPickUpInfo(currentDriver)
         // })
 
+        debugger
+
 
 
         let d = new Date(new_array[0].estimatedTime)
         let l = new Date(new_array[0].scheduledTime)
+
+        let terminal = new_array[0].terminal
+        let arrivalAirport = new_array[0].iataCode
+
+        let airlineName = new_array[1].name
+
         const landing_time = d.toLocaleTimeString('en-UK')
         const scheduled_landing_time = l.toLocaleTimeString('en-UK')
 
+        
+
         if(status === "landed"){
-            div.innerText = `Your flight has landed at: ${landing_time}`
+            div.innerText = `Your flight has landed at ${arrivalAirport} Terminal ${terminal} at: ${landing_time}`
         }
         else if(status === "active"){
-            div.innerText = `Your flight is due to land at: ${landing_time}`
+            div.innerText = `Your flight is due to land at ${arrivalAirport} Terminal ${terminal} at: ${landing_time}`
+        }
+        else if(status === "diverted"){
+            div.innerText = `Unfortunately your flight has been diverted. Please check with ${airlineName} for more details`
+        }
+        else if(status === "cancelled"){
+            div.innerText = `Unfortunately your flight has been cancelled. Please check with ${airlineName} for more details`
         }
         else{
-            div.innerText = `Your flight is due to land at: ${scheduled_landing_time}`
+            div.innerText = `Your flight is due to land at ${arrivalAirport} Terminal ${terminal} at: ${scheduled_landing_time}`
         }
 
 
         const estimated_time_return_button = document.createElement('button')
         estimated_time_return_button.innerText = 'return to Pickup Profile'
         div.appendChild(estimated_time_return_button)
+
+        div.appendChild(addedWaitTimeDiv)
 
         estimated_time_return_button.addEventListener('click', event => {
             console.log('click')
