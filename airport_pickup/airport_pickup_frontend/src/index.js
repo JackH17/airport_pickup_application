@@ -1,5 +1,7 @@
 const body = document.body
 let currentDriver;
+let navbar = document.querySelector(".nav-wrapper")
+let background_img = document.querySelector("#bg")
 
 const DRIVERS_URL = 'http://localhost:3000/drivers'
 const AIRPORTS_URL = 'http://localhost:3000/airports'
@@ -12,32 +14,50 @@ const addedWaitTimeDiv = document.createElement('div')
 const fullFlightListDiv = document.createElement('div')
 
 
-document.addEventListener('DOMContentLoaded', event => {
-
+document.addEventListener('DOMContentLoaded', (event) => {
     mainPage();
 })
 
 const mainPage = () =>{
 
+    body.innerHTML = ""
+
     const div = document.createElement("div")
     const h3 = document.createElement("h3")
     const login_button = document.createElement("button")
     const signup_option = document.createElement("button")
-
-    div.id = "welcome"
+    const login_button_div = document.createElement("div")
+    login_button_div.id = "login-button-div"
+    const sign_up_button_div = document.createElement("div")
+    login_button_div.setAttribute('align', 'center')
+    sign_up_button_div.setAttribute('align', 'center')
+    
+    h3.style.textAlign = "center"
     h3.innerText = "What would you like to do?"
+    h3.style.color = "white"
+
     login_button.id = "login"
+    login_button.className = "waves-effect waves-light btn"
     login_button.innerText = "Login"
+
     signup_option.innerText = "Signup"
     signup_option.id = "signup"
 
-    body.appendChild(div)
+    signup_option.className = "waves-effect waves-light btn"
+
     div.appendChild(h3)
-    div.appendChild(login_button)
-    div.appendChild(signup_option) 
-    login_button.addEventListener("click", function(){
+    div.appendChild(login_button_div)
+    div.appendChild(sign_up_button_div)
+
+    login_button_div.appendChild(login_button)
+    sign_up_button_div.appendChild(signup_option)
+    
+    body.appendChild(div)
+
+    login_button.addEventListener("click", function() {
         Login();
     })
+
     signup_option.addEventListener('click', event => {
         console.log('click')
         signup();
@@ -47,7 +67,6 @@ const mainPage = () =>{
     
 
 signup = () => {
-
     body.innerHTML = ""
     const div = document.createElement("div")
     const sub_div1 = document.createElement("div")
@@ -96,7 +115,7 @@ signup = () => {
     form.appendChild(sub_div2)
     form.appendChild(sub_div3)
     form.appendChild(sub_div4)
-        // const airportCode = event.target.elements.airport.value
+
 
     form.appendChild(sign_up_button)
 
@@ -106,13 +125,18 @@ signup = () => {
         let password = document.querySelector("#password_input").value
         let firstName = document.querySelector("#first_name_input").value
         let lastName = document.querySelector("#last_name_input").value
-        // getFlightInfo(airportCode, flightNumber)
-        // // getFlightInfo2(flightNumber)
+
 
         let newDriverData = {username: username, password: password, firstname: firstName, lastname: lastName}
         createNewDriver(newDriverData)
     })
 
+}
+
+
+const Logout = (driver) => {
+    driver = ""
+    mainPage()
 }
 
 const createNewDriver = newDriverData => {
@@ -127,31 +151,71 @@ const createNewDriver = newDriverData => {
     .then(data => greetDriver(data))
 }
 
+const createNavbar = (currentDriver) =>{
+    let nav = document.createElement("nav")
+    let navbar_div = document.createElement("div")
+
+    let ul_navbar_left = document.createElement("ul")
+    let ul_navbar_right = document.createElement("ul")
+
+    let li_navbar_view = document.createElement("li")
+    let li_navbar_create = document.createElement("li")
+    let li_navbar_logout = document.createElement("li")
+
+    let a_view = document.createElement("a")
+    let a_create = document.createElement("a")
+    let a_logout = document.createElement("a")
+
+    navbar_div.className = "nav-wrapper"
+
+    ul_navbar_left.className = "left hide-on-med-and-down"
+    ul_navbar_right.className = "right hide-on-med-and-down"
+
+    a_view.innerText = 'View your Pickups'
+    a_create.innerText = "Create a new Pickup"
+    a_logout.innerText = "Logout"
+    a_logout.style.alignContent = "right"
+
+    nav.appendChild(navbar_div)
+
+    navbar_div.appendChild(ul_navbar_left)
+    navbar_div.appendChild(ul_navbar_right)
+
+    ul_navbar_left.appendChild(li_navbar_view)
+    ul_navbar_left.appendChild(li_navbar_create)
+    ul_navbar_right.appendChild(li_navbar_logout
+        )
+    li_navbar_view.appendChild(a_view)
+    li_navbar_create.appendChild(a_create)
+    li_navbar_logout.appendChild(a_logout)
+
+    body.appendChild(nav)
+
+    li_navbar_view.addEventListener('click', event => {
+        event.preventDefault()
+        viewUserPickups(currentDriver)
+    })
+
+    li_navbar_create.addEventListener('click', event => {
+        event.preventDefault()
+        getPickUpInfo(currentDriver);
+    })
+
+    li_navbar_logout.addEventListener("click", event =>{
+        event.preventDefault()
+        Logout(currentDriver)
+    })
+
+}
 
 
-// const greetNewDriver = (driver) => {
-//     debugger
-//     body.innerHTML = ""
-//     let currentDriver = driver;
-//     newDriverWelcomeDiv = document.createElement('div')
 
-//     newDriverWelcomeMessage = document.createElement('p')
-//     newDriverWelcomeMessage.innerText = `Welcome ${currentDriver.firstname}`
-//     newDriverWelcomeDiv.appendChild(newDriverWelcomeMessage)
+const greetNewDriver = (driver) => {
+    body.innerHTML = ""
+    let currentDriver = driver;
+    createNavbar(currentDriver);
 
-//     newDriverNewPickups = document.createElement('p')
-//     newDriverNewPickups.innerText = `Make your first Pickup`
-//     newDriverWelcomeDiv.appendChild(newDriverNewPickups)
-
-//     newDriverNewPickups.addEventListener('click', event => {
-//         event.preventDefault()
-//         getPickUpInfo(currentDriver);
-
-//     })
-
-//     body.appendChild(newDriverWelcomeDiv)
-
-// }
+}
 
 
 
@@ -192,15 +256,15 @@ const Login = () => {
         fetchDrivers()
     })
 }
-    
 
 const fetchDrivers = () =>{
+        
         fetch(DRIVERS_URL)
         .then(response => response.json())
         .then(drivers => {
             validateLogin(drivers);
         })
-    }
+}
 
  const validateLogin = (driverArray) =>{
         let username = document.querySelector("#username_input").value
@@ -232,8 +296,39 @@ const greetDriver = currentDriver => {
 
 
         body.innerHTML = ""
+        let nav = document.createElement("nav")
+        let navbar_div = document.createElement("div")
+        let ul_navbar_left = document.createElement("ul")
+        let ul_navbar_right = document.createElement("ul")
+        let li_navbar_view = document.createElement("li")
+        let li_navbar_create = document.createElement("li")
+        let li_navbar_logout = document.createElement("li")
+        let a_view = document.createElement("a")
+        let a_create = document.createElement("a")
+        let a_logout = document.createElement("a")
+        navbar_div.className = "nav-wrapper"
+        ul_navbar_left.className = "left hide-on-med-and-down"
+        ul_navbar_right.className = "right hide-on-med-and-down"
+        a_view.innerText = 'View your PickUps'
+        a_create.innerText = "Create a new Pickup"
+        a_logout.innerText = "Logout"
+        a_logout.style.alignContent = "right"
+        nav.appendChild(navbar_div)
+        navbar_div.appendChild(ul_navbar_left)
+        navbar_div.appendChild(ul_navbar_right)
+        ul_navbar_left.appendChild(li_navbar_view)
+        ul_navbar_left.appendChild(li_navbar_create)
+        ul_navbar_right.appendChild(li_navbar_logout)
+        li_navbar_view.appendChild(a_view)
+        li_navbar_create.appendChild(a_create)
+        li_navbar_logout.appendChild(a_logout)
+
+        
+        body.appendChild(nav)
+        
         welcomeDiv = document.createElement('div')
         welcomeMessage = document.createElement('p')
+        welcomeMessage.style.textAlign = "center"
         welcomeMessage.innerText = `Hello ${currentDriver.firstname}`
         welcomeDiv.appendChild(welcomeMessage)
 
@@ -241,17 +336,25 @@ const greetDriver = currentDriver => {
         currentPickups = document.createElement('button')
         currentPickups.innerText = 'View your PickUps'
         welcomeDiv.appendChild(currentPickups)
+
         currentPickups.addEventListener('click', event => {
             event.preventDefault()
             console.log('i was clicked')
-            viewUserPickups(currentDriver)
         })
 
+        li_navbar_view.addEventListener('click', event => {
+            viewUserPickups(currentDriver)
+        })
+ 
 
-        createNewPickup = document.createElement('button')
-        createNewPickup.innerText = 'Create new Pickup'
-        welcomeDiv.appendChild(createNewPickup)
-        createNewPickup.addEventListener('click', event => {
+        // createNewPickup = document.createElement('button')
+        // createNewPickup.innerText = 'Create new Pickup'
+        // welcomeDiv.appendChild(createNewPickup)
+        // createNewPickup.addEventListener('click', event => {
+        // createNewPickup = document.createElement('p')
+        // createNewPickup.innerText = 'Create new Pickup'
+        // welcomeDiv.appendChild(createNewPickup)
+        li_navbar_create.addEventListener('click', event => {
             event.preventDefault()
             debugger
             getPickUpInfo(currentDriver)
@@ -267,9 +370,13 @@ const greetDriver = currentDriver => {
         })
 
 
+        li_navbar_logout.addEventListener("click", event =>{
+            event.preventDefault()
+            Logout(currentDriver)
+        })
 
      body.appendChild(welcomeDiv)
-    }
+}
 
 const viewUserPickups = currentDriver => {
 
@@ -423,9 +530,6 @@ const showPickups = driverInfo => {
 
 
     const createPickup = (pickupData) => {
-
-        debugger
-
         console.log(pickupData)
         fetch(PICKUPS_URL, {
             method: 'POST',
@@ -546,24 +650,6 @@ const showPickups = driverInfo => {
         body.innerHTML = ""
         estimatedTimeDiv = document.createElement("div")
         
-        // const createNewPickUpDiv = document.createElement("div")
-        // createNewPickUpDiv.innerText = 'create new pickup'
-        // div.appendChild(createNewPickUpDiv)
-
-        // const viewdDriverPickups = document.createElement("div")
-        // viewdDriverPickups.innerText = 'view all pickups'
-        // div.appendChild(viewdDriverPickups)
-
-        // viewdDriverPickups.addEventListener('click', event => {
-        //     event.preventDefault()
-        //     console.log('i was clicked')
-        //     viewUserPickups(currentDriver)
-        // })
-
-        // createNewPickUpDiv.addEventListener('click', event => {
-        //     event.preventDefault()
-        //     getPickUpInfo(currentDriver)
-        // })
 
         let d = new Date(new_array[0].estimatedTime)
         let l = new Date(new_array[0].scheduledTime)
@@ -676,15 +762,13 @@ const flightsList = currentDriver => {
 
     flightNumberOnlyForm.addEventListener('submit', function(e){
         e.preventDefault()
-        // showCurrentFlights()
         console.log('submit')
 
         debugger
         const passengerName = e.target.elements.paxName.value
         const flightNumberOnly = e.target.elements.flightNumberOnly.value.toUpperCase()
         const driver = currentDriver.id
-        // createPickup({passenger_name: passengerName, flight_number: flightNumberOnly, driver_id: driver})
-        // console.log(allLondonFlightsToday[0][0].flight.iataNumber)
+
         const megaFlightsArray = allLondonFlightsToday.flat()
         getInfoUsingFlightNumber(megaFlightsArray, flightNumberOnly, passengerName)
 
@@ -720,32 +804,29 @@ const allLondonFlightsToday = []
 
 
 function showCurrentFlights(){
-  // this runs when you hit the show flights button as it needs the data to be fetched before it can work :)
-  // it is going to match the data in our API with the flights API to get accurate times and data on any button hit
-  // once we have the flight data we can render the data to the page
+
   const megaFlightsArray = allLondonFlightsToday.flat()
   const freshFlightData = []
-  // console.log(megaFlightsArray)
+
   fetch(BUSINESS_PICKUPS_URL)
     .then(resp => resp.json())
     .then(savedLandings => {
       const myLandings = savedLandings.filter(function(landing) {
         return landing.driver_id === currentDriver.id })
-        // console.log(myLandings)
+
           myLandings.forEach(function(landing){
-            // for (let i=0; i<=megaFlightsArray.length; i++){
+      
             megaFlightsArray.forEach(function(flight){
               if (flight.flight.iataNumber === landing.flight_number){
 
                   renderLanding(flight, landing)
                 }
-                // use flight number to get accurate landing data for my flights
-                // renderLanding(landing)
+  
             })
           })
         })
 
-      }
+}
 
 
 
@@ -778,7 +859,7 @@ function renderLanding(flight, landing){
   }
   statusSpan.innerHTML = `Status: ${flight.status} `
   airportSpan.innerHTML = `Airport: ${landing.airport.name}  `
-  // ${flight.arrival.iataCode}
+
   terminalSpan.innerHTML = `Terminal: ${flight.arrival.terminal} `
   passengerSpan.innerHTML = `Passenger: ${landing.passenger_name} `
   flightNumberSpan.innerHTML = `Flight Number: ${flight.flight.iataNumber} `
@@ -860,7 +941,8 @@ function renderLanding(flight, landing){
     }
 
 
-    function makeLandingCard(flightNumber, status, time, code, terminal, passenger_name){
+    function makeLandingCard(flightNumber, status, time, code, terminal, passenger_name)
+    {
       const li = document.createElement("li")
       const flightNumberSpan = document.createElement("span")
       const statusSpan = document.createElement("span")
@@ -890,7 +972,7 @@ function renderLanding(flight, landing){
       return flightCardDiv
 
 
-    }
+}
 
     function createLanding(landingData, button, li){
 
@@ -914,6 +996,6 @@ function renderLanding(flight, landing){
           // render landing to page
         })
       })
-    }
+}
 
    
