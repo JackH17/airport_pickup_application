@@ -14,7 +14,13 @@ const addedWaitTimeDiv = document.createElement('div')
 
 document.addEventListener('DOMContentLoaded', (event) => {
     mainPage();
+
+    //buisnessUserorPersonalUser();
 })
+
+//const = buisnessUserorPersonalUser => {
+    
+}
 
 const mainPage = () =>{
     const div = document.createElement("div")
@@ -439,7 +445,6 @@ const Login = () => {
                    new_array.push(flightData[i].airline)
                }
            }
-        //    estimatedTime(new_array,status);
 
         let array_of_hours = []
         let our_hour = new_array[0].scheduledTime
@@ -459,6 +464,7 @@ const Login = () => {
  
      const evaluateHour = (array_of_hours,our_flight_hour_for_compare) => {
          let counter = 0;
+
          for(let i=0;i<array_of_hours.length;i++)
          {
              if(array_of_hours[i] === our_flight_hour_for_compare)
@@ -466,21 +472,42 @@ const Login = () => {
                  counter++
              }
          }
+
+         let dayAverage = array_of_hours.length /18
+
+         let flightsThisHour = counter/dayAverage
+
+         let percentageFlightsThisHour = flightsThisHour * 100
+
+         console.log(percentageFlightsThisHour)
+
+         debugger
+
+
          
-         addWaitingTime(counter)
+         addWaitingTime(percentageFlightsThisHour)
      }
 
 
-    const addWaitingTime = counter => {
+    const addWaitingTime = percentageFlightsThisHour => {
 
         const waitingTimeDiv = document.createElement('div')
         const waitingTime = document.createElement('p')
 
+        waitingTimeDiv.innerHTML = " "
 
 
-        if(counter > 100){
-            waitingTime.innerText = 'Due to high volume of flights we would suggest leaving 1 hour to clear security and arrivals'
-        } 
+
+        if(percentageFlightsThisHour > 200){
+            waitingTime.innerText = 'Due to extremely high volume of flights arriving at this hour we would suggest leaving 1:30 hrs to clear security and arrivals'
+        } else if (percentageFlightsThisHour > 150) {
+            waitingTime.innerText = 'Due to high volume of flights arriving at this hour we would suggest leaving 1 hour to clear security and arrivals'
+        } else if (percentageFlightsThisHour > 100) {
+            waitingTime.innerText = 'Due to average volume of flights arriving at this hour we would suggest leaving 45 minutes to clear security and arrivals'
+        } else {
+            waitingTime.innerText = 'Due to low volume of flights arriving at this hour we would suggest leaving 30 minutes to clear security and arrivals'
+        }
+
         waitingTimeDiv.appendChild(waitingTime)
 
         addedWaitTimeDiv.appendChild(waitingTimeDiv)
@@ -494,30 +521,25 @@ const Login = () => {
         console.log(status)
         body.innerHTML = ""
         div = document.createElement("div")
+        
+        // const createNewPickUpDiv = document.createElement("div")
+        // createNewPickUpDiv.innerText = 'create new pickup'
+        // div.appendChild(createNewPickUpDiv)
 
-        // let newPickUpDiv = document.createElement("div")
-        // let viewPickupDiv = document.createElement("div")
+        // const viewdDriverPickups = document.createElement("div")
+        // viewdDriverPickups.innerText = 'view all pickups'
+        // div.appendChild(viewdDriverPickups)
 
-        // viewPickUpDiv.innerText = 'view all pickups'
-        // newPickupDiv.innerText = 'create new pickup'
-
-        // div.appendChild(viewPickUpDiv)
-        // div.appendChild(newPickUpDiv)
-
-        // viewPickUpDiv.addEventListener('click', event => {
+        // viewdDriverPickups.addEventListener('click', event => {
         //     event.preventDefault()
         //     console.log('i was clicked')
         //     viewUserPickups(currentDriver)
         // })
 
-        // newPickupDiv.addEventListener('click', event => {
+        // createNewPickUpDiv.addEventListener('click', event => {
         //     event.preventDefault()
         //     getPickUpInfo(currentDriver)
         // })
-
-        debugger
-
-
 
         let d = new Date(new_array[0].estimatedTime)
         let l = new Date(new_array[0].scheduledTime)
