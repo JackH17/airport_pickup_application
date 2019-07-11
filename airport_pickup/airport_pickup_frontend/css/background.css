@@ -1,0 +1,21 @@
+html{
+    background:url("background.jpeg") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+.button{
+    display: block;
+  max-width: 300px;
+  margin: auto;
+}
+
+#login-button-div{
+    margin-bottom: 20px;
+}
+
+.btn{
+    border-radius:4px;
+}
