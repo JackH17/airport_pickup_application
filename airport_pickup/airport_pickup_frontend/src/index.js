@@ -395,27 +395,37 @@ const showPickups = driverInfo => {
         const showAllPickipDiv = document.createElement('div')
 
         const pickupList = document.createElement('div')
-        individualPickupDiv = document.createElement('ul')
+        pickupList.className = 'timetable'
+        individualPickupUl = document.createElement('ul')
+
         let i = 0;
         driverInfo.pickups.forEach(pickup => {
             liItem = document.createElement('li')
-            liItem.id = ++i
-            liItem.innerText = pickup.passenger_name 
-            individualPickupDiv.appendChild(liItem)
 
-            // let pickupResolved = document.createElement('button')
-            // pickupResolved.innerText = 'pickUp made'
+            let itemDiv = document.createElement('div')
 
-            // individualPickupDiv.appendChild(pickupResolved)
+            let indPickupInfo = document.createElement('p')
+            indPickupInfo.className = 'li' 
+            indPickupInfo.innerText = `Due to pick up ${pickup.passenger_name} on flight number ${pickup.flight_number}`
+            itemDiv.appendChild(indPickupInfo)
 
-            pickupList.appendChild(individualPickupDiv)
+            let showIndividualPickup = document.createElement('button')
+            showIndividualPickup.innerText = 'show more info'
 
-            // pickupResolved.addEventListener('click', event => {
-            //     console.log('click')
-            //     event.preventDefault()
-            //     resolveThisPickup(pickup, liItem)
-            // }) 
+            itemDiv.appendChild(showIndividualPickup)
+
+
+            liItem.appendChild(itemDiv)
+            individualPickupUl.appendChild(liItem)
+
+            showIndividualPickup.addEventListener('click', event => {
+                console.log('click')
+                event.preventDefault()
+                showPickup(pickup)
+            })
         })
+
+        pickupList.appendChild(individualPickupUl)
 
 
         const return_button = document.createElement('button')
@@ -433,20 +443,56 @@ const showPickups = driverInfo => {
         console.log(driverInfo)
     }
 
-    // const resolveThisPickup = (pickupInfo, liItem) => {
+    const showPickup = (pickupInfo) => {
 
-    //     console.log(pickupInfo)
-    //     debugger
+        body.innerHTML = " "
 
-    //     liItem.remove()
+        const pickupInfoPage = document.createElement('div')
+        pickupInfoPage.className = 'timetable'
+
+        debugger
+
+        const pickupPassengerDetails = document.createElement('p')
+        pickupPassengerDetails.className = 'li'
+        pickupPassengerDetails.innerText = `${pickupInfo.passenger_name} on flight number ${pickupInfo.flight_number}`
+
+        
+        pickupInfoPage.appendChild(pickupPassengerDetails)
+
+        const resolvePickup = document.createElement('button')
+        resolvePickup.innerText = 'pickUp made'
+        pickupInfoPage.appendChild(resolvePickup)
 
 
+        const return_button_to_pickups_button = document.createElement('button')
+        return_button_to_pickups_button.innerText = 'return to your Pickups'
+        pickupInfoPage.appendChild(return_button_to_pickups_button)
 
-    //     fetch(`${PICKUPS_URL}/${pickupInfo.id}`, {
-    //         method: 'DELETE'
-    //     })
-    //     .then(console.log('pickUp resolved'))
-    // }
+    
+        body.appendChild(pickupInfoPage)
+
+        return_button_to_pickups_button.addEventListener('click', event => {
+            console.log('click')
+            showPickups(currentDriver)
+        })
+
+        resolvePickup.addEventListener('click', event => {
+            console.log('click')
+            deleteThisPickup(pickupInfo)
+        })
+    
+    }
+
+    const deleteThisPickup = pickupInfo => {
+
+        fetch(`${PICKUPS_URL}/${pickupInfo.id}`, {
+            method: 'DELETE'
+        })
+        .then(console.log('Your Event Has Been Deleted'))
+
+        greetDriver(currentDriver)
+
+    }
 
 
 
@@ -620,7 +666,9 @@ const showPickups = driverInfo => {
     const addWaitingTime = percentageFlightsThisHour => {
 
         let waitingTimeDiv = document.createElement('div')
+        waitingTimeDiv.className = "timetable"
         const waitingTime = document.createElement('p')
+        waitingTime.className = "li"
 
         waitingTimeDiv.innerHTML = " "
 
@@ -655,7 +703,12 @@ const showPickups = driverInfo => {
         console.log(status)
         body.innerHTML = ""
         estimatedTimeDiv = document.createElement("div")
-        
+        estimatedTimeDiv.className = "timetable"
+
+
+        estimatedTimeDivContent = document.createElement('p')
+        estimatedTimeDivContent.className = "li"
+        estimatedTimeDiv.appendChild(estimatedTimeDivContent)
 
         let d = new Date(new_array[0].estimatedTime)
         let l = new Date(new_array[0].scheduledTime)
@@ -671,19 +724,19 @@ const showPickups = driverInfo => {
         
 
         if(status === "landed"){
-            estimatedTimeDiv.innerText = `Your flight has landed at ${arrivalAirport} Terminal ${terminal} at: ${landing_time}`
+            estimatedTimeDivContent.innerText = `Your flight has landed at ${arrivalAirport} Terminal ${terminal} at: ${landing_time}`
         }
         else if(status === "active"){
-            estimatedTimeDiv.innerText = `Your flight is due to land at ${arrivalAirport} Terminal ${terminal} at: ${landing_time}`
+            estimatedTimeDivContent.innerText = `Your flight is due to land at ${arrivalAirport} Terminal ${terminal} at: ${landing_time}`
         }
         else if(status === "diverted"){
-            estimatedTimeDiv.innerText = `Unfortunately your flight has been diverted. Please check with ${airlineName} for more details`
+            estimatedTimeDivContent.innerText = `Unfortunately your flight has been diverted. Please check with ${airlineName} for more details`
         }
         else if(status === "cancelled"){
-            estimatedTimeDiv.innerText = `Unfortunately your flight has been cancelled. Please check with ${airlineName} for more details`
+            estimatedTimeDivContent.innerText = `Unfortunately your flight has been cancelled. Please check with ${airlineName} for more details`
         }
         else{
-            estimatedTimeDiv.innerText = `Your flight is due to land at ${arrivalAirport} Terminal ${terminal} at: ${scheduled_landing_time}`
+            estimatedTimeDivContent.innerText = `Your flight is due to land at ${arrivalAirport} Terminal ${terminal} at: ${scheduled_landing_time}`
         }
 
        
@@ -691,7 +744,7 @@ const showPickups = driverInfo => {
 
         const estimated_time_return_button = document.createElement('button')
         estimated_time_return_button.innerText = 'return to Pickup Profile'
-        estimatedTimeDiv.appendChild(estimated_time_return_button)
+        
 
        
         estimatedTimeDiv.appendChild(addedWaitTimeDiv)
@@ -710,6 +763,7 @@ const showPickups = driverInfo => {
 
         body.appendChild(estimatedTimeDiv)
         body.appendChild(addedWaitTimeDiv)
+        body.appendChild(estimated_time_return_button)
 
     }
 
@@ -951,6 +1005,7 @@ function renderLanding(flight, landing){
     function makeLandingCard(flightNumber, status, time, code, terminal, passenger_name)
     {
       const li = document.createElement("li")
+      li.className = 'li'
       const flightNumberSpan = document.createElement("span")
       const statusSpan = document.createElement("span")
       const timeSpan = document.createElement("span")
