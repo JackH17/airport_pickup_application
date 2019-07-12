@@ -5,7 +5,7 @@ class PickupsController < ApplicationController
 
     def index
        @pickup = Pickup.all
-       render json: @pickup, except: [:created_at, :updated_at]
+       render json: @pickup, except: [:created_at, :updated_at], include: [:airport]
     end
 
     def create

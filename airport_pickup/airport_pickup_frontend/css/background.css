@@ -14,6 +14,10 @@ html{
     align-content: center
 }
 
+.nav {
+    box-shadow: 10px 5px 4px rgba(8, 8, 8, 0.897);
+}
+
 #login_button{
     align-content: center
 }
@@ -57,5 +61,64 @@ html{
  }
 
  h3{
-     font-weight: bold
+     font-weight: bold;
+     color: white;
+     text-align: center;
+     text-shadow: 5px 3px 1px rgb(53, 53, 53);
  }
+#my_flights_button{
+    margin-top: 10px;
+}
+
+#flight-return-button{
+    margin-top: 10px;
+}
+
+.timetable{
+    margin-top: 20px;
+    padding-top: 10px;
+    text-align: center;
+    margin-left: 25%;
+    margin-right: 25%;
+    background-color: rgba(158, 157, 157, 0.61);
+    box-shadow: 10px 3px 2px rgba(78, 78, 78, 0.521);
+    border-radius: 25px;
+}
+
+.flight-info-form{
+    
+    margin-top: 10%;
+    margin-bottom: 10%;
+}
+
+#resolve-button {
+    margin-bottom: 10px;
+
+}
+
+
+.li {
+    color: rgb(255, 255, 255);
+    text-shadow: 2px 3px 1px rgb(124, 122, 122);
+    font-family: 'Allerta Stencil', sans-serif;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+#timetable{
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-top: 20px;
+    text-align: center;
+    margin-left: 25%;
+    margin-right: 25%;
+    background-color: rgba(158, 157, 157, 0.61);
+    box-shadow: 10px 3px 2px rgba(78, 78, 78, 0.521);
+}
+
+#passenger::-webkit-input-placeholder{
+  color:    rgb(255, 218, 218);
+}
+ #flight_number::-webkit-input-placeholder{
+    color:    rgb(255, 218, 218);
+  }

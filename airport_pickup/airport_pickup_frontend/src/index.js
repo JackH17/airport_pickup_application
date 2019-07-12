@@ -125,6 +125,7 @@ signup = () => {
 
     form.appendChild(sign_up_button)
 
+    first_name_input.required = true;
     sign_up_button.addEventListener('click', function(e) {
         e.preventDefault()
         let username = document.querySelector("#username_input").value
@@ -134,7 +135,7 @@ signup = () => {
 
 
         let newDriverData = {username: username, password: password, firstname: firstName, lastname: lastName}
-        createNewDriver(newDriverData)
+        createNewDriver(newDriverData);
     })
 
 }
@@ -349,33 +350,48 @@ const viewUserPickups = currentDriver => {
 const showPickups = driverInfo => {
 
         body.innerHTML = ""
+        createNavbar(driverInfo)
 
-        const showAllPickipDiv = document.createElement('div')
+        // const showAllPickipDiv = document.createElement('div')
 
         const pickupList = document.createElement('div')
+        pickupList.className = 'timetable'
+        individualPickupUl = document.createElement('ul')
 
+        let i = 0;
         driverInfo.pickups.forEach(pickup => {
-            individualPickupDiv = document.createElement('div')
+            liItem = document.createElement('li')
 
-            liItem = document.createElement('p')
-            liItem.innerText = pickup.passenger_name 
-            individualPickupDiv.appendChild(liItem)
+            let itemDiv = document.createElement('div')
 
-            let pickupResolved = document.createElement('button')
-            pickupResolved.innerText = 'pickUp made'
+            let indPickupInfo = document.createElement('p')
+            indPickupInfo.className = 'li' 
+            indPickupInfo.innerText = `Due to pick up ${pickup.passenger_name} on flight number ${pickup.flight_number}`
+            itemDiv.appendChild(indPickupInfo)
 
-            individualPickupDiv.appendChild(pickupResolved)
+            let showIndividualPickup = document.createElement('button')
+            showIndividualPickup.innerText = 'show more info'
+            showIndividualPickup.className = "waves-effect waves-light btn teal lighten-1"
 
-            pickupList.appendChild(individualPickupDiv)
+            itemDiv.appendChild(showIndividualPickup)
 
-            pickupResolved.addEventListener('click', event => {
+
+            liItem.appendChild(itemDiv)
+            individualPickupUl.appendChild(liItem)
+
+            showIndividualPickup.addEventListener('click', event => {
                 console.log('click')
-                resolveThisPickup(pickup, individualPickupDiv)
-            }) 
+                event.preventDefault()
+                showPickup(pickup)
+            })
         })
+
+        pickupList.appendChild(individualPickupUl)
+
 
         const return_button = document.createElement('button')
         return_button.innerText = 'return to Pickup Profile'
+        return_button.className = 'waves-effect waves-light btn teal lighten-1'
         pickupList.appendChild(return_button)
 
         return_button.addEventListener('click', event => {
@@ -383,24 +399,67 @@ const showPickups = driverInfo => {
             greetDriver(currentDriver)
         })
 
+        // showAllPickipDiv.appendChild(pickupList)
 
-
-        showAllPickipDiv.appendChild(pickupList)
-
-        body.appendChild(showAllPickipDiv)
+        body.appendChild(pickupList)
         console.log(driverInfo)
     }
 
-    const resolveThisPickup = (pickupInfo, individualPickupDiv) => {
+    const showPickup = (pickupInfo) => {
 
-        console.log(pickupInfo)
+        body.innerHTML = " "
 
-        individualPickupDiv.remove()
+        createNavbar(currentDriver)
+
+        const pickupInfoPage = document.createElement('div')
+        pickupInfoPage.id = 'timetable'
+
+        debugger
+
+        const pickupPassengerDetails = document.createElement('p')
+        pickupPassengerDetails.className = 'li'
+        pickupPassengerDetails.innerText = `${pickupInfo.passenger_name} on flight number ${pickupInfo.flight_number}`
+
+        
+        pickupInfoPage.appendChild(pickupPassengerDetails)
+
+        const resolvePickup = document.createElement('button')
+        resolvePickup.innerText = 'pickUp made'
+        resolvePickup.className = 'waves-effect waves-light btn teal lighten-1'
+        resolvePickup.id = 'resolve-button'
+        pickupInfoPage.appendChild(resolvePickup)
+
+
+        const return_button_to_pickups_button = document.createElement('button')
+        return_button_to_pickups_button.innerText = 'return to your Pickups'
+        return_button_to_pickups_button.className = 'waves-effect waves-light btn teal lighten-1'
+        resolvePickup.id = 'resolve-button'
+        pickupInfoPage.appendChild(return_button_to_pickups_button)
+
+    
+        body.appendChild(pickupInfoPage)
+
+        return_button_to_pickups_button.addEventListener('click', event => {
+            console.log('click')
+            showPickups(currentDriver)
+        })
+
+        resolvePickup.addEventListener('click', event => {
+            console.log('click')
+            deleteThisPickup(pickupInfo)
+        })
+    
+    }
+
+    const deleteThisPickup = pickupInfo => {
 
         fetch(`${PICKUPS_URL}/${pickupInfo.id}`, {
             method: 'DELETE'
         })
-        .then(console.log('pickUp resolved'))
+        .then(window.alert('Your pick up has been made'))
+
+        greetDriver(currentDriver)
+
     }
 
 
@@ -412,26 +471,49 @@ const showPickups = driverInfo => {
 
         body.innerHTML = ""
      
+        createNavbar(currentDriver)
+        const row1 = document.createElement("div")
+        const row2 = document.createElement("div")
+        const row3 = document.createElement("div")
         const newPickupDiv = document.createElement('div')
+        const newPickupDiv2 = document.createElement('div')
+        const newPickupDiv3 = document.createElement('div')
+        
+        row1.className="row"
+        row2.className="row"
+        row3.className="row"
+        
+        newPickupDiv.className = "input-field col offset-s4 s4"
+        newPickupDiv2.className = "input-field col offset-s4 s4"
+        newPickupDiv3.className = "input-field col offset-s4 s4"
      
         const newPickUpForm = document.createElement('form')
         newPickUpForm.id = 'new-pickup-form'
+        newPickUpForm.className = 'flight-info-form'
+        newPickUpForm.autocomplete = 'off'
      
         const passenegerNameInput = document.createElement('input')
+        passenegerNameInput.id = "passenger"
+        const i_user = document.createElement("i")
+        const i_flight = document.createElement("i")
+
+        i_flight.className = "material-icons prefix"
+        i_flight.innerText = "airplanemode_active"
+        i_user.className = "material-icons prefix"
+        i_user.innerText = "account_circle"
+        
+        newPickupDiv.appendChild(i_user)
+        newPickupDiv2.appendChild(i_flight)
         passenegerNameInput.placeholder = 'Passenger name'
         passenegerNameInput.name = 'passengerName'
-        newPickUpForm.appendChild(passenegerNameInput)
      
         const flightNumber = document.createElement('input')
+        flightNumber.id = "flight_number"
         flightNumber.placeholder = 'Flight Number'
         flightNumber.name = 'flightNumber'
-        newPickUpForm.appendChild(flightNumber)
 
 
-        const arrivalAirport_div = document.createElement('div')
         const arrivalAirport = document.createElement('select')
-        arrivalAirport_div.className = "input-field col s12"
-        arrivalAirport_div.appendChild(arrivalAirport)
         arrivalAirport.id = 'airport-drop-down'
         arrivalAirport.name = 'airport'
         arrivalAirport.style.display = "block"
@@ -462,11 +544,18 @@ const showPickups = driverInfo => {
         
         
         button = document.createElement("button")
-     
-     
-        newPickupDiv.appendChild(newPickUpForm)
-        newPickUpForm.appendChild(arrivalAirport)
-        body.appendChild(newPickupDiv)
+        
+        newPickUpForm.appendChild(row1)
+        newPickUpForm.appendChild(row2)
+        newPickUpForm.appendChild(row3)
+        row1.appendChild(newPickupDiv)
+        row2.appendChild(newPickupDiv2)
+        row3.appendChild(newPickupDiv3)
+        newPickupDiv.appendChild(passenegerNameInput)
+        newPickupDiv2.appendChild(flightNumber)
+        newPickupDiv3.appendChild(arrivalAirport)
+
+        body.appendChild(newPickUpForm)
      
      
      
@@ -507,6 +596,7 @@ const showPickups = driverInfo => {
         })
         .then(response => response.json())
         .then(data => console.log(data))
+        
     }
 
     const showPickUpInfo = (airportCode, flightNumber) => {
@@ -514,6 +604,7 @@ const showPickups = driverInfo => {
         fetch(`http://aviation-edge.com/v2/public/timetable?key=${apiKey}&iataCode=${airportCode}&type=arrival`)
          .then(response => response.json())
          .then(data => findFlight(data, flightNumber))
+         .catch(error => window.alert('could not find flight matching that number'))
     }
 
     const findFlight = (flightData, flightNumber) => {
@@ -580,8 +671,12 @@ const showPickups = driverInfo => {
 
     const addWaitingTime = percentageFlightsThisHour => {
 
+        addedWaitTimeDiv.innerHTML = ""
+
         let waitingTimeDiv = document.createElement('div')
+        waitingTimeDiv.className = "timetable"
         const waitingTime = document.createElement('p')
+        waitingTime.className = "li"
 
         waitingTimeDiv.innerHTML = " "
 
@@ -613,8 +708,17 @@ const showPickups = driverInfo => {
 
         console.log(status)
         body.innerHTML = ""
+
+        createNavbar(currentDriver)
+
+
         estimatedTimeDiv = document.createElement("div")
-        
+        estimatedTimeDiv.className = "timetable"
+
+
+        estimatedTimeDivContent = document.createElement('p')
+        estimatedTimeDivContent.className = "li"
+        estimatedTimeDiv.appendChild(estimatedTimeDivContent)
 
         let d = new Date(new_array[0].estimatedTime)
         let l = new Date(new_array[0].scheduledTime)
@@ -630,27 +734,28 @@ const showPickups = driverInfo => {
         
 
         if(status === "landed"){
-            estimatedTimeDiv.innerText = `Your flight has landed at ${arrivalAirport} Terminal ${terminal} at: ${landing_time}`
+            estimatedTimeDivContent.innerText = `Your flight has landed at ${arrivalAirport} Terminal ${terminal} at: ${landing_time}`
         }
         else if(status === "active"){
-            estimatedTimeDiv.innerText = `Your flight is due to land at ${arrivalAirport} Terminal ${terminal} at: ${landing_time}`
+            estimatedTimeDivContent.innerText = `Your flight is due to land at ${arrivalAirport} Terminal ${terminal} at: ${landing_time}`
         }
         else if(status === "diverted"){
-            estimatedTimeDiv.innerText = `Unfortunately your flight has been diverted. Please check with ${airlineName} for more details`
+            estimatedTimeDivContent.innerText = `Unfortunately your flight has been diverted. Please check with ${airlineName} for more details`
         }
         else if(status === "cancelled"){
-            estimatedTimeDiv.innerText = `Unfortunately your flight has been cancelled. Please check with ${airlineName} for more details`
+            estimatedTimeDivContent.innerText = `Unfortunately your flight has been cancelled. Please check with ${airlineName} for more details`
         }
         else{
-            estimatedTimeDiv.innerText = `Your flight is due to land at ${arrivalAirport} Terminal ${terminal} at: ${scheduled_landing_time}`
+            estimatedTimeDivContent.innerText = `Your flight is due to land at ${arrivalAirport} Terminal ${terminal} at: ${scheduled_landing_time}`
         }
 
        
 
 
         const estimated_time_return_button = document.createElement('button')
+        estimated_time_return_button.className = 'waves-effect waves-light btn teal lighten-1'
         estimated_time_return_button.innerText = 'return to Pickup Profile'
-        estimatedTimeDiv.appendChild(estimated_time_return_button)
+        
 
        
         estimatedTimeDiv.appendChild(addedWaitTimeDiv)
@@ -669,12 +774,14 @@ const showPickups = driverInfo => {
 
         body.appendChild(estimatedTimeDiv)
         body.appendChild(addedWaitTimeDiv)
+        body.appendChild(estimated_time_return_button)
 
     }
 
 
 
 const flightCardDiv = document.querySelector('#flight-card-div')
+flightCardDiv.className = "timetable"
 
 
 // BUSINESS FEATURE
@@ -685,7 +792,7 @@ const flightsList = currentDriver => {
 
     body.innerHTML = " "
     flightCardDiv.innerHTML = " "
-    
+    createNavbar(currentDriver)
 
     const flightListDiv = document.createElement('div')
 
@@ -695,20 +802,35 @@ const flightsList = currentDriver => {
     flightListTitle.innerHTML = 'Enter Your Passenger Name and Flight Details'
     flightListDiv.appendChild(flightListTitle)
 
+    const flightListFormDiv = document.createElement('div')
+
     const flightNumberOnlyForm = document.createElement('form')
     flightNumberOnlyForm.id = 'flight-number-form'
     flightListDiv.appendChild(flightNumberOnlyForm)
 
     flightNumberOnlyForm.innerHTML = 
-    `<input type="text" name="paxName" value="" placeholder="Passenger Name" class="input-text">
-    <br>
-    <input type="text" name="flightNumberOnly" value="" placeholder="Enter Flight Number" class="input-text">
-    <br>
-    <input type="submit" name="submit" value="Add To Flight Watcher" class="submit">`
+    `<form>
+    <div class="row">
+        <div class="input-field col offset-s4 s4">
+        <i class="material-icons prefix">account_circle</i>
+        <input type="text" name="paxName" value="" placeholder="Passenger Name" autocomplete="off">
+        </div>
+    </div>
+    <div class="row">
+        <div class="input-field col offset-s4 s4">
+        <i class="material-icons prefix">airplanemode_active</i>
+        <input type="text" name="flightNumberOnly" value="" placeholder="Enter Flight Number" class="input-text">
+        </div>
+    </div>
+    <div><input type="submit" name="submit" value="Add To Flight Watcher" class="waves-effect waves-light btn teal lighten-1"></div>
+    </form>`
+
 
     const showFlightsDiv = document.createElement('div')
     
     const showMyFlightsButton = document.createElement("button")
+    showMyFlightsButton.id = "my_flights_button"
+    showMyFlightsButton.className = "waves-effect waves-light btn teal lighten-1"
     showMyFlightsButton.innerHTML = "Show My Flights"
     showFlightsDiv.appendChild(showMyFlightsButton)
     flightListDiv.appendChild(showFlightsDiv)
@@ -743,6 +865,8 @@ const flightsList = currentDriver => {
 
     const flight_list_return_button = document.createElement('button')
         flight_list_return_button.innerText = 'return to Pickup Profile'
+        flight_list_return_button.className = 'waves-effect waves-light btn teal lighten-1'
+        flight_list_return_button.id = 'flight-return-button'
         flightListDiv.appendChild(flight_list_return_button)
 
         flight_list_return_button.addEventListener('click', event => {
@@ -909,6 +1033,7 @@ function renderLanding(flight, landing){
     function makeLandingCard(flightNumber, status, time, code, terminal, passenger_name)
     {
       const li = document.createElement("li")
+      li.className = 'li'
       const flightNumberSpan = document.createElement("span")
       const statusSpan = document.createElement("span")
       const timeSpan = document.createElement("span")
