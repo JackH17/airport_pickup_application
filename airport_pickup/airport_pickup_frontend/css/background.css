@@ -45,10 +45,17 @@ html{
     margin-top: 15%;
 }
 
- 
-.input-field:-webkit-autofill,
-.input-field:-webkit-autofill:hover,
-.input-field:-webkit-autofill:focus,
-.input-field:-webkit-autofill:active {
-    -webkit-transition-delay: 99999s;
-}
+
+ #greet_text{
+        color: white;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-top: -50px;
+        margin-left: -90px;
+        height: 100px;
+ }
+
+ h3{
+     font-weight: bold
+ }

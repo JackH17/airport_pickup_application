@@ -167,9 +167,12 @@ const createNavbar = (currentDriver) =>{
     let li_navbar_view = document.createElement("li")
     let li_navbar_create = document.createElement("li")
     let li_navbar_logout = document.createElement("li")
+    let li_navbar_show = document.createElement("li")
+
 
     let a_view = document.createElement("a")
     let a_create = document.createElement("a")
+    let a_show = document.createElement("a")
     let a_logout = document.createElement("a")
 
     navbar_div.className = "nav-wrapper"
@@ -179,6 +182,8 @@ const createNavbar = (currentDriver) =>{
 
     a_view.innerText = 'View your Pickups'
     a_create.innerText = "Create a new Pickup"
+    a_show.innerText = "Show My Flights"
+
     a_logout.innerText = "Logout"
     a_logout.style.alignContent = "right"
 
@@ -189,10 +194,11 @@ const createNavbar = (currentDriver) =>{
 
     ul_navbar_left.appendChild(li_navbar_view)
     ul_navbar_left.appendChild(li_navbar_create)
-    ul_navbar_right.appendChild(li_navbar_logout
-        )
+    ul_navbar_left.appendChild(li_navbar_show)
+    ul_navbar_right.appendChild(li_navbar_logout)
     li_navbar_view.appendChild(a_view)
     li_navbar_create.appendChild(a_create)
+    li_navbar_show.appendChild(a_show)
     li_navbar_logout.appendChild(a_logout)
 
     body.appendChild(nav)
@@ -210,6 +216,11 @@ const createNavbar = (currentDriver) =>{
     li_navbar_logout.addEventListener("click", event =>{
         event.preventDefault()
         Logout(currentDriver)
+    })
+
+    li_navbar_show.addEventListener("click",event =>{
+        event.preventDefault()
+        flightsList(currentDriver)
     })
 
 }
@@ -318,89 +329,14 @@ const fetchDrivers = () =>{
     }
 
 const greetDriver = currentDriver => {
-
-
         body.innerHTML = ""
-        let nav = document.createElement("nav")
-        let navbar_div = document.createElement("div")
-        let ul_navbar_left = document.createElement("ul")
-        let ul_navbar_right = document.createElement("ul")
-        let li_navbar_view = document.createElement("li")
-        let li_navbar_create = document.createElement("li")
-        let li_navbar_logout = document.createElement("li")
-        let a_view = document.createElement("a")
-        let a_create = document.createElement("a")
-        let a_logout = document.createElement("a")
-        navbar_div.className = "nav-wrapper teal lighten-1"
-        ul_navbar_left.className = "left hide-on-med-and-down"
-        ul_navbar_right.className = "right hide-on-med-and-down"
-        a_view.innerText = 'View your PickUps'
-        a_create.innerText = "Create a new Pickup"
-        a_logout.innerText = "Logout"
-        a_logout.style.alignContent = "right"
-        nav.appendChild(navbar_div)
-        navbar_div.appendChild(ul_navbar_left)
-        navbar_div.appendChild(ul_navbar_right)
-        ul_navbar_left.appendChild(li_navbar_view)
-        ul_navbar_left.appendChild(li_navbar_create)
-        ul_navbar_right.appendChild(li_navbar_logout)
-        li_navbar_view.appendChild(a_view)
-        li_navbar_create.appendChild(a_create)
-        li_navbar_logout.appendChild(a_logout)
-
-        
-        body.appendChild(nav)
-        
-        welcomeDiv = document.createElement('div')
-        welcomeMessage = document.createElement('p')
-        welcomeMessage.style.textAlign = "center"
-        welcomeMessage.innerText = `Hello ${currentDriver.firstname}`
-        welcomeDiv.appendChild(welcomeMessage)
-
-
-        currentPickups = document.createElement('button')
-        currentPickups.innerText = 'View your PickUps'
-        welcomeDiv.appendChild(currentPickups)
-
-        currentPickups.addEventListener('click', event => {
-            event.preventDefault()
-            console.log('i was clicked')
-        })
-
-        li_navbar_view.addEventListener('click', event => {
-            viewUserPickups(currentDriver)
-        })
- 
-
-        // createNewPickup = document.createElement('button')
-        // createNewPickup.innerText = 'Create new Pickup'
-        // welcomeDiv.appendChild(createNewPickup)
-        // createNewPickup.addEventListener('click', event => {
-        // createNewPickup = document.createElement('p')
-        // createNewPickup.innerText = 'Create new Pickup'
-        // welcomeDiv.appendChild(createNewPickup)
-        li_navbar_create.addEventListener('click', event => {
-            event.preventDefault()
-            debugger
-            getPickUpInfo(currentDriver)
-        })
-
-        showMyFlightsList = document.createElement('button')
-        showMyFlightsList.innerText = 'Show My Flights List'
-        welcomeDiv.appendChild(showMyFlightsList)
-        showMyFlightsList.addEventListener('click', event => {
-            event.preventDefault()
-            console.log('i was clicked')
-            flightsList(currentDriver)
-        })
-
-
-        li_navbar_logout.addEventListener("click", event =>{
-            event.preventDefault()
-            Logout(currentDriver)
-        })
-
-     body.appendChild(welcomeDiv)
+        createNavbar(currentDriver)
+        div = document.createElement("div")
+        div.id = "greet_text"
+        h3 = document.createElement("h3")
+        h3.innerText = `Hello ${currentDriver.firstname}`
+        div.appendChild(h3)
+        body.appendChild(div)
 }
 
 const viewUserPickups = currentDriver => {
@@ -515,10 +451,10 @@ const showPickups = driverInfo => {
         londonStansted.value = 'STN'
         arrivalAirport.appendChild(londonStansted)
      
-        const londonCity = document.createElement('option')
-        londonCity.innerText = 'London City'
-        londonCity.value = 'LCY'
-        arrivalAirport.appendChild(londonCity)
+        // const londonCity = document.createElement('option')
+        // londonCity.innerText = 'London City'
+        // londonCity.value = 'LCY'
+        // arrivalAirport.appendChild(londonCity)
      
         const pickupSubmit = document.createElement('input')
         pickupSubmit.type = 'submit'
@@ -587,7 +523,6 @@ const showPickups = driverInfo => {
            console.log(flightNumber)
            const new_array = []
            let status;
-           let airline;
 
            for(let i=0;i < flightData.length;i++)
            {
@@ -598,6 +533,7 @@ const showPickups = driverInfo => {
                    new_array.push(flightData[i].airline)
                }
            }
+           debugger
 
         let array_of_hours = []
         let our_hour = new_array[0].scheduledTime
