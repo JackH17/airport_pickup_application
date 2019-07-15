@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_10_084631) do
+ActiveRecord::Schema.define(version: 2019_07_12_070327) do
 
   create_table "airports", force: :cascade do |t|
     t.string "name"
@@ -36,11 +36,11 @@ ActiveRecord::Schema.define(version: 2019_07_10_084631) do
 
   create_table "drivers", force: :cascade do |t|
     t.string "username"
-    t.string "password"
-    t.string "lastname"
-    t.string "firstname"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "firstname"
+    t.string "lastname"
+    t.string "password"
   end
 
   create_table "pickups", force: :cascade do |t|

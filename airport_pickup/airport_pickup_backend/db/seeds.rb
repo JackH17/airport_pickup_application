@@ -7,7 +7,7 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 
-airports = Airport.create([{name: 'Heathrow Airport', code: 'LHR', status:'open'}, {name: 'Gatwick Airport', code: 'LGW', status:'open'}, {name: 'Stansted Airport', code: 'STN', status:'open'}, {name: 'London City Airport', code: 'LCY', status:'open'}])
+airports = Airport.create([{name: 'Heathrow Airport', code: 'LHR', status:'open'}, {name: 'Gatwick Airport', code: 'LGW', status:'open'}, {name: 'Stansted Airport', code: 'STN', status:'open'}, {name: 'London City Airport', code: 'LCY', status:'open'}, {name: 'Luton Aitport', code: 'LTN', status:'open'} ])
 
 currentDriver = Driver.create({firstname: "jack", lastname: "nicholson", username: "new", password:"password"})
 currentDriver2 = Driver.create({firstname: "pedro", lastname: "nicholson", username: "new1", password:"password"})

@@ -1,11 +1,11 @@
-html{
+/* html{
     background:url("background.jpeg") no-repeat center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
-}
-
+} */
+/*
 .button{
     display: block;
   max-width: 300px;
@@ -20,12 +20,19 @@ html{
     border-radius:4px;
 }
 
-.timetable{
+/* .timetable{
     background-color: black;
-}
+} */
 
-.li {
+/* .li {
     color: yellow;
     font-family: 'Russo One', sans-serif;
+
+} */
+
+.hee {
+  font-family: 'Timmana', sans-serif;
+  color: teal;
+  /* font-weight: 1000; */
 
 }

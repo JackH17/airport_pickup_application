@@ -3,32 +3,34 @@ class DriversController < ApplicationController
     # before_action :set_driver, only: [:show, :destroy]
 
 
-    def index 
+    def index
        @driver = Driver.all
        render json: @driver, except: [:created_at, :updated_at], include: [:pickups]
-    end 
+    end
 
-    def create 
+    def create
         @driver = Driver.create!(driver_params)
         render json: @driver, except: [:created_at, :updated_at]
-    end 
+    end
 
-    def show 
+    def show
         @driver = Driver.find(params[:id])
         render json: @driver, include: [:pickups]
-    end 
+    end
 
-    def destroy 
+    def destroy
         @driver.destroy
-    end 
+    end
 
-    private 
+    private
 
     def driver_params
         params.require(:driver).permit(:username, :password, :firstname, :lastname)
-    end 
+        # params.require(:driver).permit(:username)
 
-    def set_driver 
+    end
+
+    def set_driver
         @driver = Driver.find(params[:id])
-    end 
+    end
 end
